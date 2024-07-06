@@ -8,6 +8,7 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import com.example.madcamp_week2.databinding.ActivityMainBinding
+import android.content.Intent
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -31,6 +32,11 @@ class MainActivity : AppCompatActivity() {
         // Kakao Login Button Click Listener
         binding.kakaoLoginButton.setOnClickListener {
             loginWithKakao()
+        }
+
+        binding.searchButton.setOnClickListener {
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -74,4 +80,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }
