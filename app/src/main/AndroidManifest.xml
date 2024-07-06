@@ -37,6 +37,7 @@
             android:exported="false" />
 
         <activity android:name=".EditProfileActivity" />
+        <activity android:name=".BookProfileActivity" />
 
 
 

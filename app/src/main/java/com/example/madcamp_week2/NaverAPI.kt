@@ -1,5 +1,7 @@
 package com.example.madcamp_week2
 
+import android.os.Parcel
+import android.os.Parcelable
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -57,5 +59,35 @@ data class Book(
     val author: String,
     val publisher: String,
     val pubdate: String,
-    val isbn: String,
-)
+    val isbn: String
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: ""
+    )
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(title)
+        parcel.writeString(image)
+        parcel.writeString(author)
+        parcel.writeString(publisher)
+        parcel.writeString(pubdate)
+        parcel.writeString(isbn)
+    }
+
+    override fun describeContents(): Int = 0
+
+    companion object CREATOR : Parcelable.Creator<Book> {
+        override fun createFromParcel(parcel: Parcel): Book {
+            return Book(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Book?> {
+            return arrayOfNulls(size)
+        }
+    }
+}

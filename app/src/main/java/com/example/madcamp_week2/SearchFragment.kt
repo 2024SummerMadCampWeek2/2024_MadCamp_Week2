@@ -1,5 +1,6 @@
 package com.example.madcamp_week2
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -34,7 +35,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        bookAdapter = BookAdapter()
+        bookAdapter = BookAdapter { book -> showBookProfile(book) }
         val gridLayoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerView.apply {
             layoutManager = gridLayoutManager
@@ -53,6 +54,12 @@ class SearchFragment : Fragment() {
                 }
             })
         }
+    }
+
+    private fun showBookProfile(book: Book) {
+        val intent = Intent(requireContext(), BookProfileActivity::class.java)
+        intent.putExtra("book", book)
+        startActivity(intent)
     }
 
     private fun setupSearchView() {
@@ -106,5 +113,10 @@ class SearchFragment : Fragment() {
         if (!isLoading) {
             searchBooks(currentQuery)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
