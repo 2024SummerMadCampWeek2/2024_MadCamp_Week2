@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
@@ -9,6 +10,8 @@
         android:id="@+id/userProfileImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -16,9 +19,11 @@
         android:id="@+id/userNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:textSize="36sp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="4dp"
         android:fontFamily="@font/kopu"
+        android:textColor="@color/black"
+        android:textSize="36sp"
         app:layout_constraintStart_toEndOf="@id/userProfileImageView"
         app:layout_constraintTop_toTopOf="@id/userProfileImageView" />
 
@@ -26,20 +31,23 @@
         android:id="@+id/userBioTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/noto"
-        app:layout_constraintStart_toStartOf="@id/userNameTextView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/userNameTextView"
         app:layout_constraintTop_toBottomOf="@id/userNameTextView" />
 
-    <Button
+    <ImageButton
         android:id="@+id/editProfileButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="프로필 수정"
-        android:fontFamily="@font/noto"
-        app:layout_constraintTop_toBottomOf="@id/userProfileImageView"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@null"
+        android:scaleType="centerInside"
+        android:src="@drawable/edit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
