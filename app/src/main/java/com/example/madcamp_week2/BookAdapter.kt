@@ -21,9 +21,9 @@ class BookAdapter : ListAdapter<Book, BookAdapter.BookViewHolder>(BookDiffCallba
 
     class BookViewHolder(private val binding: ItemBookBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(book: Book) {
-            binding.bookTitle.text = book.title
             Glide.with(binding.root.context)
                 .load(book.image)
+                .centerCrop()
                 .into(binding.bookCover)
         }
     }

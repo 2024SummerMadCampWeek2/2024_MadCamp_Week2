@@ -1,85 +1,51 @@
 package com.example.madcamp_week2
 
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import com.bumptech.glide.Glide
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.common.util.Utility
-import com.kakao.sdk.user.UserApiClient
+import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.viewpager2.widget.ViewPager2
 import com.example.madcamp_week2.databinding.ActivityMainBinding
-import android.content.Intent
-
+import com.example.madcamp_week2.ViewPagerAdapter
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
-    companion object {
-        private const val TAG = "MainActivity"
-    }
+    private lateinit var viewPagerAdapter: ViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val keyHash = Utility.getKeyHash(this)
-        if (keyHash != null) {
-            Log.d(TAG, "keyhash : $keyHash")
+        setupFullscreen()
+        setupViewPager()
+    }
+
+    private fun setupFullscreen() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.let {
+                it.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+                it.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
         } else {
-            Log.e(TAG, "Failed to get keyhash, keyHash is null")
-        }
-
-        // Kakao Login Button Click Listener
-        binding.kakaoLoginButton.setOnClickListener {
-            loginWithKakao()
-        }
-
-        binding.searchButton.setOnClickListener {
-            val intent = Intent(this, SearchActivity::class.java)
-            startActivity(intent)
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
         }
     }
 
-    private fun loginWithKakao() {
-        // First try to login with KakaoTalk
-        UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
-            if (error != null) {
-                Log.e(TAG, "KakaoTalk login failed", error)
-                // If KakaoTalk login fails, fallback to login with Kakao Account
-                loginWithKakaoAccount()
-            } else if (token != null) {
-                Log.i(TAG, "KakaoTalk login succeeded. Token: ${token.accessToken}")
-                getUserProfile()
-            }
-        }
+    private fun setupViewPager() {
+        viewPagerAdapter = ViewPagerAdapter(this)
+        binding.viewPager.adapter = viewPagerAdapter
+        binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
     }
-
-    private fun loginWithKakaoAccount() {
-        UserApiClient.instance.loginWithKakaoAccount(this) { token, error ->
-            if (error != null) {
-                Log.e(TAG, "KakaoAccount login failed", error)
-            } else if (token != null) {
-                Log.i(TAG, "KakaoAccount login succeeded. Token: ${token.accessToken}")
-                getUserProfile()
-            }
-        }
-    }
-
-    private fun getUserProfile() {
-        UserApiClient.instance.me { user, error ->
-            if (error != null) {
-                Log.e(TAG, "Failed to get user profile", error)
-            } else if (user != null) {
-                Log.i(TAG, "User profile: ${user.kakaoAccount?.profile?.nickname}, ${user.kakaoAccount?.profile?.thumbnailImageUrl}")
-
-                // Display user profile
-                binding.userNameTextView.text = user.kakaoAccount?.profile?.nickname
-                Glide.with(this)
-                    .load(user.kakaoAccount?.profile?.thumbnailImageUrl)
-                    .into(binding.userProfileImageView)
-            }
-        }
-    }
-
-
 }
