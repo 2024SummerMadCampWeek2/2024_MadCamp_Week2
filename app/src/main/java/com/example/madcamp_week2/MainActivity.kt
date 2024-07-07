@@ -7,12 +7,17 @@ import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.example.madcamp_week2.databinding.ActivityMainBinding
 import com.example.madcamp_week2.ViewPagerAdapter
+import com.kakao.sdk.user.UserApiClient
+import kotlinx.coroutines.launch
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewPagerAdapter: ViewPagerAdapter
+    private lateinit var userRepository: UserRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,8 +25,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        userRepository = UserRepository(this)
+
         setupFullscreen()
         setupViewPager()
+        loadUserData()
     }
 
     private fun setupFullscreen() {
@@ -47,5 +55,36 @@ class MainActivity : AppCompatActivity() {
         viewPagerAdapter = ViewPagerAdapter(this)
         binding.viewPager.adapter = viewPagerAdapter
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+    }
+
+    private fun loadUserData() {
+        UserApiClient.instance.me { user, error ->
+            if (error != null) {
+                // 에러 처리
+            } else if (user != null) {
+                lifecycleScope.launch {
+                    val userData = userRepository.getUser(user.id.toString())
+                    if (userData == null) {
+                        // 새 사용자 생성
+                        val newUser = UserData(
+                            name = user.kakaoAccount?.profile?.nickname ?: "Unknown",
+                            profileImage = user.kakaoAccount?.profile?.thumbnailImageUrl,
+                            description = null,
+                            reviewed_books = emptyList(),
+                            read_books = emptyList()
+                        )
+                        userRepository.createUser(newUser)
+                        updateProfileFragment(newUser)
+                    } else {
+                        updateProfileFragment(userData)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateProfileFragment(userData: UserData) {
+        val profileFragment = supportFragmentManager.findFragmentByTag("f0") as? ProfileFragment
+        profileFragment?.updateUserData(userData)
     }
 }
