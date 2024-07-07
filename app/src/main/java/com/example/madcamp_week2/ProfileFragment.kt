@@ -1,21 +1,26 @@
 package com.example.madcamp_week2
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.madcamp_week2.databinding.FragmentProfileBinding
-import com.kakao.sdk.user.UserApiClient
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.util.Log
+import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+    private lateinit var userRepository: UserRepository
+    private lateinit var readBooksAdapter: BookListAdapter
+    private lateinit var toReadBooksAdapter: BookListAdapter
+    private lateinit var sessionManager: SessionManager
+    private var pendingUserData: UserData? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
@@ -24,47 +29,45 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loadUserProfile()
+        userRepository = UserRepository(requireContext())
+        sessionManager = SessionManager(requireContext())
+        setupRecyclerViews()
         setupEditButton()
+
+        pendingUserData?.let {
+            updateUserData(it)
+            pendingUserData = null
+        }
     }
 
-    private fun loadUserProfile() {
-        val sharedPref = activity?.getSharedPreferences("UserProfile", Context.MODE_PRIVATE) ?: return
-        val name = sharedPref.getString("user_name", null)
-        val imageUri = sharedPref.getString("profile_image", null)
-        val bio = sharedPref.getString("user_bio", null)
-
-        if (name != null) {
-            binding.userNameTextView.text = name
-        } else {
-            // 저장된 이름이 없으면 카카오 계정에서 가져오기
-            UserApiClient.instance.me { user, error ->
-                if (error != null) {
-                    Log.e("ProfileFragment", "Failed to get user info", error)
-                } else if (user != null) {
-                    binding.userNameTextView.text = user.kakaoAccount?.profile?.nickname
-                }
-            }
+    fun updateUserData(userData: UserData) {
+        if (_binding == null) {
+            pendingUserData = userData
+            return
         }
 
-        if (imageUri != null) {
-            Glide.with(this)
-                .load(Uri.parse(imageUri))
-                .into(binding.userProfileImageView)
-        } else {
-            // 저장된 이미지가 없으면 카카오 프로필 이미지 사용
-            UserApiClient.instance.me { user, error ->
-                if (error != null) {
-                    Log.e("ProfileFragment", "Failed to get user info", error)
-                } else if (user != null) {
-                    Glide.with(this)
-                        .load(user.kakaoAccount?.profile?.thumbnailImageUrl)
-                        .into(binding.userProfileImageView)
-                }
-            }
+        binding.userNameTextView.text = userData.name
+        binding.userBioTextView.text = userData.description ?: "한 줄 소개를 입력해주세요."
+        userData.profileImage?.let { imageUri ->
+            Glide.with(this).load(imageUri).into(binding.userProfileImageView)
+        }
+        readBooksAdapter.submitList(userData.read_books)
+        toReadBooksAdapter.submitList(userData.reviewed_books.map { it.ISBN })
+        Log.d("ProfileFragment", "User data updated: $userData")
+    }
+
+    private fun setupRecyclerViews() {
+        readBooksAdapter = BookListAdapter()
+        binding.readBooksRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = readBooksAdapter
         }
 
-        binding.userBioTextView.text = bio ?: "한 줄 소개를 입력해주세요."
+        toReadBooksAdapter = BookListAdapter()
+        binding.toReadBooksRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = toReadBooksAdapter
+        }
     }
 
     private fun setupEditButton() {
@@ -76,7 +79,13 @@ class ProfileFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        loadUserProfile()
+        lifecycleScope.launch {
+            val username = sessionManager.getUserName()
+            username?.let {
+                val userData = userRepository.getLocalUser(it)
+                userData?.let { updateUserData(it) }
+            }
+        }
     }
 
     override fun onDestroyView() {

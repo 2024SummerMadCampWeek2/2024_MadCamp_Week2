@@ -21,9 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="4dp"
-        android:fontFamily="@font/kopu"
         android:textColor="@color/black"
-        android:textSize="36sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@id/userProfileImageView"
         app:layout_constraintTop_toTopOf="@id/userProfileImageView" />
 
@@ -31,10 +30,8 @@
         android:id="@+id/userBioTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/noto"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/userNameTextView"
         app:layout_constraintTop_toBottomOf="@id/userNameTextView" />
 
@@ -49,5 +46,41 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/readBooksLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="읽은 책"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userProfileImageView"
+        android:layout_marginTop="24dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/readBooksRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/readBooksLabel"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/toReadBooksLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="읽을 책"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/readBooksRecyclerView"
+        android:layout_marginTop="24dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/toReadBooksRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/toReadBooksLabel"
+        android:layout_marginTop="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

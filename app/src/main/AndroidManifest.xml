@@ -38,6 +38,10 @@
 
         <activity android:name=".EditProfileActivity" />
 
+        <activity
+            android:name=".BookDetailActivity"
+            android:exported="false" />
+
 
 
         <activity

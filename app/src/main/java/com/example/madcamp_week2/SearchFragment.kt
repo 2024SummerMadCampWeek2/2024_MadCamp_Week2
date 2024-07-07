@@ -1,5 +1,6 @@
 package com.example.madcamp_week2
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -34,7 +35,11 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        bookAdapter = BookAdapter()
+        bookAdapter = BookAdapter { book ->
+            val intent = Intent(activity, BookDetailActivity::class.java)
+            intent.putExtra("book", book)
+            startActivity(intent)
+        }
         val gridLayoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerView.apply {
             layoutManager = gridLayoutManager

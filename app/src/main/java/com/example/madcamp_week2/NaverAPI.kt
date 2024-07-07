@@ -1,5 +1,7 @@
 package com.example.madcamp_week2
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -51,11 +53,12 @@ data class BookSearchResponse(
     val items: List<Book>
 )
 
+@Parcelize
 data class Book(
     val title: String,
     val image: String,
     val author: String,
     val publisher: String,
     val pubdate: String,
-    val isbn: String,
-)
+    val isbn: String
+) : Parcelable
