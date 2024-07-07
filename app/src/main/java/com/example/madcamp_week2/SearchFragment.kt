@@ -7,13 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.widget.SearchView
 import com.example.madcamp_week2.databinding.FragmentSearchBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
@@ -22,6 +21,7 @@ class SearchFragment : Fragment() {
     private var currentPage = 1
     private var isLoading = false
     private var currentQuery = ""
+    private lateinit var bookRepository: BookRepository
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
@@ -30,6 +30,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        bookRepository = (requireActivity().application as MyApplication).bookRepository
         setupRecyclerView()
         setupSearchView()
     }
@@ -82,31 +83,19 @@ class SearchFragment : Fragment() {
         Log.d("SearchFragment", "Searching for: $query")
         isLoading = true
         val start = (currentPage - 1) * 10 + 1
-        val call = NaverAPI.create().searchBooks(query, start, 10)
-        call.enqueue(object : Callback<BookSearchResponse> {
-            override fun onResponse(call: Call<BookSearchResponse>, response: Response<BookSearchResponse>) {
-                activity?.runOnUiThread {
-                    isLoading = false
-                    if (response.isSuccessful) {
-                        val books = response.body()?.items ?: emptyList()
-                        Log.d("SearchFragment", "Received ${books.size} books")
-                        val currentList = bookAdapter.currentList.toMutableList()
-                        currentList.addAll(books)
-                        bookAdapter.submitList(currentList)
-                        currentPage++
-                    } else {
-                        Log.e("SearchFragment", "Error: ${response.code()}")
-                    }
-                }
+        lifecycleScope.launch {
+            try {
+                val books = bookRepository.getBooks(query, start, 10)
+                isLoading = false
+                val currentList = bookAdapter.currentList.toMutableList()
+                currentList.addAll(books)
+                bookAdapter.submitList(currentList)
+                currentPage++
+            } catch (e: Exception) {
+                isLoading = false
+                Log.e("SearchFragment", "Error searching books", e)
             }
-
-            override fun onFailure(call: Call<BookSearchResponse>, t: Throwable) {
-                activity?.runOnUiThread {
-                    isLoading = false
-                    Log.e("SearchFragment", "Network error", t)
-                }
-            }
-        })
+        }
     }
 
     private fun loadMoreBooks() {

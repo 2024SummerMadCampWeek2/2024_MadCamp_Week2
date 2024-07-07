@@ -2,12 +2,14 @@ package com.example.madcamp_week2
 
 import android.app.Application
 import com.kakao.sdk.common.KakaoSdk
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.*
 
 class MyApplication : Application() {
+    val database by lazy { AppDatabase.getDatabase(this) }
+    val userRepository by lazy { UserRepository(database.userDao(), serverAPI) }
+    val bookRepository by lazy { BookRepository(database.bookDao(), NaverAPI.create()) }
+
     companion object {
         lateinit var serverAPI: ServerAPI
     }
