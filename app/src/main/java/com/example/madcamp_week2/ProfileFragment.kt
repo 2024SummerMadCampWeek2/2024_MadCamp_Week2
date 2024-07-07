@@ -1,8 +1,8 @@
 package com.example.madcamp_week2
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +19,7 @@ class ProfileFragment : Fragment() {
     private lateinit var userRepository: UserRepository
     private lateinit var readBooksAdapter: BookListAdapter
     private lateinit var toReadBooksAdapter: BookListAdapter
+    private lateinit var sessionManager: SessionManager
     private var pendingUserData: UserData? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -29,10 +30,10 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         userRepository = UserRepository(requireContext())
+        sessionManager = SessionManager(requireContext())
         setupRecyclerViews()
         setupEditButton()
 
-        // 대기 중인 사용자 데이터가 있으면 업데이트
         pendingUserData?.let {
             updateUserData(it)
             pendingUserData = null
@@ -41,7 +42,6 @@ class ProfileFragment : Fragment() {
 
     fun updateUserData(userData: UserData) {
         if (_binding == null) {
-            // 뷰가 아직 생성되지 않았다면 데이터를 임시 저장
             pendingUserData = userData
             return
         }
@@ -53,6 +53,7 @@ class ProfileFragment : Fragment() {
         }
         readBooksAdapter.submitList(userData.read_books)
         toReadBooksAdapter.submitList(userData.reviewed_books.map { it.ISBN })
+        Log.d("ProfileFragment", "User data updated: $userData")
     }
 
     private fun setupRecyclerViews() {
@@ -79,8 +80,11 @@ class ProfileFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch {
-            val userData = userRepository.getUser(binding.userNameTextView.text.toString())
-            userData?.let { updateUserData(it) }
+            val username = sessionManager.getUserName()
+            username?.let {
+                val userData = userRepository.getLocalUser(it)
+                userData?.let { updateUserData(it) }
+            }
         }
     }
 

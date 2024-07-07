@@ -2,6 +2,7 @@ package com.example.madcamp_week2
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
@@ -10,7 +11,6 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.example.madcamp_week2.databinding.ActivityMainBinding
-import com.example.madcamp_week2.ViewPagerAdapter
 import com.kakao.sdk.user.UserApiClient
 import kotlinx.coroutines.launch
 
@@ -18,14 +18,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private lateinit var userRepository: UserRepository
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         userRepository = UserRepository(this)
+        sessionManager = SessionManager(this)
 
         setupFullscreen()
         setupViewPager()
@@ -60,22 +61,32 @@ class MainActivity : AppCompatActivity() {
     private fun loadUserData() {
         UserApiClient.instance.me { user, error ->
             if (error != null) {
-                // 에러 처리
+                Log.e("MainActivity", "Failed to get Kakao user info", error)
             } else if (user != null) {
+                Log.d("MainActivity", "Kakao user info: ${user.id}, ${user.kakaoAccount?.profile?.nickname}")
+
+                val username = user.kakaoAccount?.profile?.nickname ?: "Unknown"
+                sessionManager.saveUserName(username)
+
                 lifecycleScope.launch {
-                    val userData = userRepository.getUser(user.id.toString())
+                    val userData = userRepository.getUser(username)
                     if (userData == null) {
-                        // 새 사용자 생성
                         val newUser = UserData(
-                            name = user.kakaoAccount?.profile?.nickname ?: "Unknown",
+                            name = username,
                             profileImage = user.kakaoAccount?.profile?.thumbnailImageUrl,
                             description = null,
                             reviewed_books = emptyList(),
                             read_books = emptyList()
                         )
-                        userRepository.createUser(newUser)
-                        updateProfileFragment(newUser)
+                        val created = userRepository.createUser(newUser)
+                        if (created) {
+                            Log.d("MainActivity", "New user created: $newUser")
+                            updateProfileFragment(newUser)
+                        } else {
+                            Log.e("MainActivity", "Failed to create new user")
+                        }
                     } else {
+                        Log.d("MainActivity", "Existing user data: $userData")
                         updateProfileFragment(userData)
                     }
                 }

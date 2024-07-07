@@ -1,6 +1,7 @@
 package com.example.madcamp_week2
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,43 +18,53 @@ class UserRepository(context: Context) {
     private val gson = Gson()
 
     suspend fun getUser(username: String): UserData? = withContext(Dispatchers.IO) {
-        val localUser = userDao.getUser(username)
-        if (localUser != null) {
-            convertEntityToUserData(localUser)
-        } else {
-            try {
-                val response = userAPI.getUser(username).execute()
-                if (response.isSuccessful) {
-                    val userData = response.body()
-                    userData?.let { saveUserLocally(it) }
-                    userData
-                } else null
-            } catch (e: Exception) {
+        try {
+            val response = userAPI.getUser(username).execute()
+            if (response.isSuccessful) {
+                val userData = response.body()
+                Log.d("UserRepository", "User data fetched from server: $userData")
+                userData?.let { saveUserLocally(it) }
+                userData
+            } else {
+                Log.e("UserRepository", "Failed to fetch user data: ${response.errorBody()?.string()}")
                 null
             }
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Error fetching user data", e)
+            null
         }
     }
 
-    suspend fun createUser(userData: UserData) = withContext(Dispatchers.IO) {
+    suspend fun createUser(userData: UserData): Boolean = withContext(Dispatchers.IO) {
         try {
             val response = userAPI.createUser(userData).execute()
             if (response.isSuccessful) {
+                Log.d("UserRepository", "User created successfully: $userData")
                 saveUserLocally(userData)
                 true
-            } else false
+            } else {
+                Log.e("UserRepository", "Failed to create user: ${response.errorBody()?.string()}")
+                false
+            }
         } catch (e: Exception) {
+            Log.e("UserRepository", "Error creating user", e)
             false
         }
     }
 
-    suspend fun updateUser(userData: UserData) = withContext(Dispatchers.IO) {
+    suspend fun updateUser(userData: UserData): Boolean = withContext(Dispatchers.IO) {
         try {
             val response = userAPI.updateUser(userData.name, userData).execute()
             if (response.isSuccessful) {
+                Log.d("UserRepository", "User updated successfully: $userData")
                 saveUserLocally(userData)
                 true
-            } else false
+            } else {
+                Log.e("UserRepository", "Failed to update user: ${response.errorBody()?.string()}")
+                false
+            }
         } catch (e: Exception) {
+            Log.e("UserRepository", "Error updating user", e)
             false
         }
     }
@@ -67,6 +78,13 @@ class UserRepository(context: Context) {
             readBooks = gson.toJson(userData.read_books)
         )
         userDao.insertUser(userEntity)
+        Log.d("UserRepository", "User data saved locally: $userEntity")
+    }
+
+    suspend fun getLocalUser(username: String): UserData? = withContext(Dispatchers.IO) {
+        val localUser = userDao.getUser(username)
+        Log.d("UserRepository", "Local user data: $localUser")
+        localUser?.let { convertEntityToUserData(it) }
     }
 
     private fun convertEntityToUserData(entity: UserEntity): UserData {
