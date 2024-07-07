@@ -9,9 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.example.madcamp_week2.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
+import android.util.Base64
+import android.graphics.BitmapFactory
 
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
@@ -33,10 +34,16 @@ class ProfileFragment : Fragment() {
         sessionManager = SessionManager(requireContext())
         setupRecyclerViews()
         setupEditButton()
+        loadUserProfile()
+    }
 
-        pendingUserData?.let {
-            updateUserData(it)
-            pendingUserData = null
+    private fun loadUserProfile() {
+        lifecycleScope.launch {
+            val username = sessionManager.getUserName()
+            username?.let {
+                val userData = userRepository.getLocalUser(it)
+                userData?.let { updateUserData(it) }
+            }
         }
     }
 
@@ -48,8 +55,15 @@ class ProfileFragment : Fragment() {
 
         binding.userNameTextView.text = userData.name
         binding.userBioTextView.text = userData.description ?: "한 줄 소개를 입력해주세요."
-        userData.profileImage?.let { imageUri ->
-            Glide.with(this).load(imageUri).into(binding.userProfileImageView)
+        userData.profileImage?.let { base64String ->
+            try {
+                val imageBytes = Base64.decode(base64String, Base64.DEFAULT)
+                val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                binding.userProfileImageView.setImageBitmap(bitmap)
+            } catch (e: IllegalArgumentException) {
+                Log.e("ProfileFragment", "Error decoding Base64 string", e)
+                // 여기에 기본 이미지를 설정하는 코드를 추가할 수 있습니다.
+            }
         }
         readBooksAdapter.submitList(userData.read_books)
         toReadBooksAdapter.submitList(userData.reviewed_books.map { it.ISBN })
@@ -79,13 +93,7 @@ class ProfileFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        lifecycleScope.launch {
-            val username = sessionManager.getUserName()
-            username?.let {
-                val userData = userRepository.getLocalUser(it)
-                userData?.let { updateUserData(it) }
-            }
-        }
+        loadUserProfile()
     }
 
     override fun onDestroyView() {

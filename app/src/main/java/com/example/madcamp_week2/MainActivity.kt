@@ -12,7 +12,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.example.madcamp_week2.databinding.ActivityMainBinding
 import com.kakao.sdk.user.UserApiClient
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -57,7 +62,28 @@ class MainActivity : AppCompatActivity() {
         binding.viewPager.adapter = viewPagerAdapter
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
     }
+    private suspend fun downloadImageAsByteArray(imageUrl: String): ByteArray {
+        return withContext(Dispatchers.IO) {
+            try {
+                val url = URL(imageUrl)
+                val connection = url.openConnection() as HttpURLConnection
+                connection.doInput = true
+                connection.connect()
 
+                val inputStream = connection.inputStream
+                val byteArrayOutputStream = ByteArrayOutputStream()
+                inputStream.use { input ->
+                    byteArrayOutputStream.use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                byteArrayOutputStream.toByteArray()
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error downloading image", e)
+                ByteArray(0)
+            }
+        }
+    }
     private fun loadUserData() {
         UserApiClient.instance.me { user, error ->
             if (error != null) {
@@ -66,15 +92,17 @@ class MainActivity : AppCompatActivity() {
                 Log.d("MainActivity", "Kakao user info: ${user.id}, ${user.kakaoAccount?.profile?.nickname}")
 
                 val username = user.kakaoAccount?.profile?.nickname ?: "Unknown"
+                val profileImage = user.kakaoAccount?.profile?.thumbnailImageUrl ?: "https://example.com/default-profile.jpg" // 기본 이미지 URL
                 sessionManager.saveUserName(username)
 
                 lifecycleScope.launch {
                     val userData = userRepository.getUser(username)
                     if (userData == null) {
+                        // 새 사용자 생성
                         val newUser = UserData(
                             name = username,
-                            profileImage = user.kakaoAccount?.profile?.thumbnailImageUrl,
-                            description = null,
+                            profileImage = profileImage,  // 기본 이미지 URL 사용
+                            description = "",  // 빈 문자열 사용
                             reviewed_books = emptyList(),
                             read_books = emptyList()
                         )

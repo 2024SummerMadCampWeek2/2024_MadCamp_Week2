@@ -57,7 +57,7 @@ class BookDetailActivity : AppCompatActivity() {
                                 review_date = LocalDate.now().toString()
                             ))
                             val updatedUserData = user.copy(reviewed_books = updatedReviewedBooks)
-                            val updated = userRepository.updateUser(updatedUserData)
+                            val updated = userRepository.updateUser(name, updatedUserData, null) // null for imageByteArray
                             if (updated) {
                                 Log.d("BookDetailActivity", "Review added successfully")
                             } else {
@@ -86,7 +86,7 @@ class BookDetailActivity : AppCompatActivity() {
                             }
                         }
                         val updatedUserData = user.copy(read_books = updatedReadBooks)
-                        val updated = userRepository.updateUser(updatedUserData)
+                        val updated = userRepository.updateUser(name, updatedUserData, null) // null for imageByteArray
                         if (updated) {
                             isBookSaved = !isBookSaved
                             updateSaveButtonUI()
