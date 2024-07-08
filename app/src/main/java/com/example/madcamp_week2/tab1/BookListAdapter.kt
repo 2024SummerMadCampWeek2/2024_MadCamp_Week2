@@ -1,11 +1,10 @@
-package com.example.madcamp_week2
+package com.example.madcamp_week2.tab1
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.madcamp_week2.databinding.ItemBookSmallBinding
 
 class BookListAdapter : ListAdapter<String, BookListAdapter.BookViewHolder>(BookDiffCallback()) {

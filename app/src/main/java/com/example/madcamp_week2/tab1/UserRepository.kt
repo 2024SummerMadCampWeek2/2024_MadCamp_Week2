@@ -1,4 +1,4 @@
-package com.example.madcamp_week2
+package com.example.madcamp_week2.tab1
 
 import android.content.Context
 import android.util.Log

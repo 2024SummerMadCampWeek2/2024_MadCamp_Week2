@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:name=".MyApplication"
+        android:name=".tab1.MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -19,7 +19,7 @@
 
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".tab1.SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
@@ -35,13 +35,13 @@
 
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".tab1.LoginActivity"
             android:exported="false" />
 
-        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".tab1.EditProfileActivity" />
 
         <activity
-            android:name=".BookDetailActivity"
+            android:name=".tab1.BookDetailActivity"
             android:exported="false" />
 
 

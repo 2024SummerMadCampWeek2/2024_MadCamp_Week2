@@ -1,4 +1,4 @@
-package com.example.madcamp_week2
+package com.example.madcamp_week2.tab1
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.madcamp_week2.databinding.ItemBookBinding
 
-class BookAdapter(private val onItemClick: (Book) -> Unit) : ListAdapter<Book, BookAdapter.BookViewHolder>(BookDiffCallback()) {
+class BookAdapter(private val onItemClick: (Book) -> Unit) : ListAdapter<Book, BookAdapter.BookViewHolder>(
+    BookDiffCallback()
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val binding = ItemBookBinding.inflate(LayoutInflater.from(parent.context), parent, false)

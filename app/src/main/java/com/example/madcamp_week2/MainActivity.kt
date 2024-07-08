@@ -11,6 +11,11 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.example.madcamp_week2.databinding.ActivityMainBinding
+import com.example.madcamp_week2.tab1.ProfileFragment
+import com.example.madcamp_week2.tab1.SessionManager
+import com.example.madcamp_week2.tab1.UserData
+import com.example.madcamp_week2.tab1.UserRepository
+import com.example.madcamp_week2.tab1.ViewPagerAdapter
 import com.kakao.sdk.user.UserApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
