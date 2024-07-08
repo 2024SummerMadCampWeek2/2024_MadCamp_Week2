@@ -52,7 +52,7 @@ class BookDetailActivity : AppCompatActivity() {
                         val userData = userRepository.getLocalUser(name)
                         userData?.let { user ->
                             val updatedReviewedBooks = user.reviewed_books.toMutableList()
-                            val existingReviewIndex = updatedReviewedBooks.indexOfFirst { it.ISBN == book.isbn }
+                            val existingReviewIndex = updatedReviewedBooks.indexOfFirst { it?.ISBN == book.isbn }
                             val newReview = ReviewedBook(
                                 ISBN = book.isbn,
                                 star = rating.toInt(),
@@ -127,10 +127,10 @@ class BookDetailActivity : AppCompatActivity() {
                     updateSaveButtonUI()
 
                     currentBook?.let { book ->
-                        val existingReview = user.reviewed_books.find { it.ISBN == book.isbn }
+                        val existingReview = user.reviewed_books.find { it?.ISBN == book.isbn }
                         existingReview?.let {
-                            binding.ratingBar.rating = it.star.toFloat()
-                            binding.reviewEditText.setText(it.review)
+                            binding.ratingBar.rating = it.star?.toFloat() ?: 0f
+                            binding.reviewEditText.setText(it.review ?: "")
                         }
                     }
                 }

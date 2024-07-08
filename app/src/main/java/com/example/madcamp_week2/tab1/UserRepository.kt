@@ -8,6 +8,8 @@ import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.json.JSONArray
+import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -40,18 +42,24 @@ class UserRepository(context: Context) {
 
     suspend fun updateUser(username: String, userData: UserData, imageByteArray: ByteArray?): Boolean = withContext(Dispatchers.IO) {
         try {
+            val userDataJson = JSONObject().apply {
+                put("name", userData.name)
+                put("description", userData.description)
+                put("reviewed_books", JSONArray(userData.reviewed_books))
+                put("read_books", JSONArray(userData.read_books))
+            }.toString()
+
+            val userDataPart = RequestBody.create("application/json".toMediaTypeOrNull(), userDataJson)
+
             val imagePart = imageByteArray?.let { bytes ->
                 val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), bytes)
                 MultipartBody.Part.createFormData("profileImage", "profile.jpg", requestFile)
             }
 
-            val userDataJson = gson.toJson(userData)
-            val userDataPart = RequestBody.create("application/json".toMediaTypeOrNull(), userDataJson)
-
             val response = userAPI.updateUser(username, userDataPart, imagePart).execute()
             if (response.isSuccessful) {
                 Log.d("UserRepository", "User updated successfully on server")
-                saveUserLocally(userData) // 로컬 데이터베이스 업데이트
+                saveUserLocally(userData)
                 true
             } else {
                 val errorBody = response.errorBody()?.string()

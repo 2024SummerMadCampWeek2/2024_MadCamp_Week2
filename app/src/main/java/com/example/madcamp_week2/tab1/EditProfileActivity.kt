@@ -78,7 +78,9 @@ class EditProfileActivity : AppCompatActivity() {
                     description = bio,
                     profileImage = imageByteArray?.let {
                         android.util.Base64.encodeToString(it, android.util.Base64.DEFAULT)
-                    } ?: currentUserData.profileImage
+                    } ?: currentUserData.profileImage,
+                    reviewed_books = currentUserData.reviewed_books,
+                    read_books = currentUserData.read_books
                 ) ?: UserData(
                     name = name,
                     profileImage = null,

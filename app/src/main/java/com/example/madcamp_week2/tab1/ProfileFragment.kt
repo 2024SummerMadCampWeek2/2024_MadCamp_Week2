@@ -68,7 +68,7 @@ class ProfileFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            val readBooks = loadBookDetails(userData.reviewed_books.map { it.ISBN })
+            val readBooks = loadBookDetails(userData.reviewed_books.mapNotNull { it?.ISBN })
             val toReadBooks = loadBookDetails(userData.read_books)
 
             withContext(Dispatchers.Main) {
