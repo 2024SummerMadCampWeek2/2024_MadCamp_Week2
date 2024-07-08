@@ -35,7 +35,7 @@ data class UserData(
 
 data class ReviewedBook(
     val ISBN: String,
-    val star: Int,
+    val star: Double,
     val review: String,
     val review_date: String
 )

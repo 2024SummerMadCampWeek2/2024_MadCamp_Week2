@@ -55,7 +55,7 @@ class BookDetailActivity : AppCompatActivity() {
                             val existingReviewIndex = updatedReviewedBooks.indexOfFirst { it?.ISBN == book.isbn }
                             val newReview = ReviewedBook(
                                 ISBN = book.isbn,
-                                star = rating.toInt(),
+                                star = rating.toDouble(),
                                 review = review,
                                 review_date = LocalDate.now().toString()
                             )
@@ -65,6 +65,10 @@ class BookDetailActivity : AppCompatActivity() {
                                 updatedReviewedBooks.add(newReview)
                             }
                             val updatedUserData = user.copy(reviewed_books = updatedReviewedBooks)
+
+                            // 로그 추가
+                            Log.d("BookDetailActivity", "Updating user data: $updatedUserData")
+
                             val updated = userRepository.updateUser(name, updatedUserData, null)
                             if (updated) {
                                 Log.d("BookDetailActivity", "Review added/updated successfully")

@@ -45,7 +45,14 @@ class UserRepository(context: Context) {
             val userDataJson = JSONObject().apply {
                 put("name", userData.name)
                 put("description", userData.description)
-                put("reviewed_books", JSONArray(userData.reviewed_books))
+                put("reviewed_books", JSONArray(userData.reviewed_books.map { reviewedBook ->
+                    JSONObject().apply {
+                        put("ISBN", reviewedBook?.ISBN)
+                        put("star", reviewedBook?.star)
+                        put("review", reviewedBook?.review)
+                        put("review_date", reviewedBook?.review_date)
+                    }
+                }))
                 put("read_books", JSONArray(userData.read_books))
             }.toString()
 
@@ -71,7 +78,6 @@ class UserRepository(context: Context) {
             false
         }
     }
-
     suspend fun createUser(userData: UserData): Boolean = withContext(Dispatchers.IO) {
         try {
             Log.d("UserRepository", "Attempting to create user with data: $userData")
