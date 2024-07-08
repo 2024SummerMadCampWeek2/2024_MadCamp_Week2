@@ -97,6 +97,13 @@ class UserRepository(context: Context) {
         }
     }
 
+    suspend fun fetchBookImages(isbnList: List<String>): List<Pair<String, String?>> = withContext(Dispatchers.IO) {
+        isbnList.map { isbn ->
+            val imageUrl = NaverAPI.getBookImageByISBN(isbn)
+            isbn to imageUrl
+        }
+    }
+
     private fun saveUserLocally(userData: UserData) {
         val userEntity = UserEntity(
             name = userData.name,

@@ -56,3 +56,4 @@ class BookListAdapter(private val isReadBooks: Boolean) : ListAdapter<Pair<Strin
         }
     }
 }
+

@@ -3,6 +3,7 @@ package com.example.madcamp_week2.tab1
 import android.os.Parcelable
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import retrofit2.Call
@@ -13,6 +14,7 @@ import retrofit2.http.Headers
 import retrofit2.http.Query
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import kotlinx.coroutines.delay
 
 interface NaverAPI {
     @Headers(
@@ -28,6 +30,7 @@ interface NaverAPI {
 
     companion object {
         private const val BASE_URL = "https://openapi.naver.com/"
+        private const val RATE_LIMIT_DELAY_MS = 6000 // 6초 지연을 통해 분당 10개 요청 제한 준수
 
         fun create(): NaverAPI {
             val logger = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
@@ -48,7 +51,9 @@ interface NaverAPI {
         suspend fun getBookImageByISBN(isbn: String): String? {
             return withContext(Dispatchers.IO) {
                 try {
-                    val response = create().searchBooks("isbn:$isbn", 1, 1).execute()
+                    // 요청 전 지연을 추가하여 속도 제한 초과를 방지
+                    delay(67)
+                    val response = create().searchBooks("$isbn", 1, 1).execute()
                     if (response.isSuccessful) {
                         response.body()?.items?.firstOrNull()?.image
                     } else {
