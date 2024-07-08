@@ -48,7 +48,7 @@
         android:layout_marginTop="16dp"/>
 
     <TextView
-        android:id="@+id/readBooksLabel"
+        android:id="@+id/toReadBooksLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="읽은 책"
@@ -59,29 +59,29 @@
         android:layout_marginTop="24dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/readBooksRecyclerView"
+        android:id="@+id/toReadBooksRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/readBooksLabel"
+        app:layout_constraintTop_toBottomOf="@id/toReadBooksLabel"
         tools:layout_editor_absoluteX="16dp" />
 
     <TextView
-        android:id="@+id/toReadBooksLabel"
+        android:id="@+id/readBooksLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="읽을 책"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/readBooksRecyclerView"
+        app:layout_constraintTop_toBottomOf="@id/toReadBooksRecyclerView"
         android:layout_marginTop="24dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/toReadBooksRecyclerView"
+        android:id="@+id/readBooksRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toReadBooksLabel"
+        app:layout_constraintTop_toBottomOf="@id/readBooksLabel"
         android:layout_marginTop="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

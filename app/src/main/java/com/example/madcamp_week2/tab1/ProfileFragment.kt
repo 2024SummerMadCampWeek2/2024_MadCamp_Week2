@@ -49,6 +49,7 @@ class ProfileFragment : Fragment() {
         }
     }
 
+
     fun updateUserData(userData: UserData) {
         if (_binding == null) {
             pendingUserData = userData
@@ -68,8 +69,8 @@ class ProfileFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            val readBooks = loadBookDetails(userData.reviewed_books.mapNotNull { it?.ISBN })
-            val toReadBooks = loadBookDetails(userData.read_books)
+            val readBooks = userRepository.fetchBookImages(userData.read_books)
+            val toReadBooks = userRepository.fetchBookImages(userData.reviewed_books.mapNotNull { it?.ISBN })
 
             withContext(Dispatchers.Main) {
                 readBooksAdapter.submitList(readBooks)
@@ -78,13 +79,6 @@ class ProfileFragment : Fragment() {
         }
 
         Log.d("ProfileFragment", "User data updated: $userData")
-    }
-
-    private suspend fun loadBookDetails(isbnList: List<String>): List<Pair<String, String?>> = withContext(Dispatchers.IO) {
-        isbnList.map { isbn ->
-            val imageUrl = NaverAPI.getBookImageByISBN(isbn)
-            isbn to imageUrl
-        }
     }
 
     private fun setupRecyclerViews() {
