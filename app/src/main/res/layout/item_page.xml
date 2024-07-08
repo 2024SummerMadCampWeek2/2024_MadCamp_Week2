@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="#000000">
+
+    <!-- First Video -->
+    <ImageView
+        android:id="@+id/videoThumbnail1"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/videoTitle1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingTop="8dp"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF" />
+
+    <!-- First Keyword -->
+    <TextView
+        android:id="@+id/keywordText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingTop="8dp"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF" />
+
+    <!-- Second Video -->
+    <ImageView
+        android:id="@+id/videoThumbnail2"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/videoTitle2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingTop="8dp"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF" />
+
+    <!-- Second Keyword -->
+    <TextView
+        android:id="@+id/keywordText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:paddingTop="8dp"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF" />
+
+</LinearLayout>

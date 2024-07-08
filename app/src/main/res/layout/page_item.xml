@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="#000000">
+
+    <ImageView
+        android:id="@+id/thumbnail1"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/keyword1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="Keyword 1"
+        android:textColor="#FFFFFF"
+        android:textSize="45sp"
+        android:fontFamily="@font/noto"
+        tools:text="Sample Keyword" />
+
+    <ImageView
+        android:id="@+id/thumbnail2"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/keyword2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="Keyword 2"
+        android:textColor="#FFFFFF"
+        android:textSize="45sp"
+        android:fontFamily="@font/noto"
+        tools:text="Sample Keyword" />
+
+    <ImageView
+        android:id="@+id/thumbnail3"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        tools:src="@tools:sample/avatars" />
+
+</LinearLayout>
