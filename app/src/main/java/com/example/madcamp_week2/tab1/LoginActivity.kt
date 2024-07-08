@@ -3,7 +3,6 @@ package com.example.madcamp_week2.tab1
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.madcamp_week2.MainActivity
 import com.example.madcamp_week2.databinding.ActivityLoginBinding
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -34,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
                     // 기타 오류 처리
                 }
             } else if (token != null) {
-                startMainActivity()
+                startSplashActivity()
             }
         }
     }
@@ -44,13 +43,14 @@ class LoginActivity : AppCompatActivity() {
             if (error != null) {
                 // 로그인 오류 처리
             } else if (token != null) {
-                startMainActivity()
+                startSplashActivity()
             }
         }
     }
 
-    private fun startMainActivity() {
-        startActivity(Intent(this, MainActivity::class.java))
+    private fun startSplashActivity() {
+        val intent = Intent(this, SplashActivity::class.java)
+        startActivity(intent)
         finish()
     }
 }

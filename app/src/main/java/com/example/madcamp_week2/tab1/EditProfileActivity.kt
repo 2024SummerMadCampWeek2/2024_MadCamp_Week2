@@ -1,17 +1,18 @@
 package com.example.madcamp_week2.tab1
 
-import android.content.Context
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.madcamp_week2.databinding.ActivityEditProfileBinding
-import android.util.Log
-import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
@@ -54,7 +55,7 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun setupImagePicker() {
-        binding.changeImageButton.setOnClickListener {
+        binding.editProfileImageView.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             startActivityForResult(intent, PICK_IMAGE_REQUEST)
         }
