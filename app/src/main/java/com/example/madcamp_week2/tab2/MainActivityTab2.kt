@@ -1,29 +1,38 @@
 package com.example.madcamp_week2.tab2
 
+import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorManager
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.example.madcamp_week2.MainActivity
+import com.example.madcamp_week2.R
 import com.example.madcamp_week2.RetrofitInstance
+import com.example.madcamp_week2.ShakeDetector
 import com.example.madcamp_week2.Trend
 import com.example.madcamp_week2.VideoItem
 import com.example.madcamp_week2.ViewPagerAdapter
 import com.example.madcamp_week2.YouTubeResponse
-import com.example.madcamp_week2.R
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivityTab2 : AppCompatActivity() {
+class MainActivityTab2 : AppCompatActivity(), ShakeDetector.OnShakeListener {
 
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private val longVideos = mutableListOf<VideoItem>()
     private val keywordList = mutableListOf<Trend>()
     private val apiKey = "AIzaSyDzvTSzWtfStXajVhq2hupfpr0kzb5Dnbo"
 
+    private lateinit var sensorManager: SensorManager
+    private lateinit var shakeDetector: ShakeDetector
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main_tab2)
 
         val viewPager: ViewPager2 = findViewById(R.id.viewPager)
         viewPager.orientation = ViewPager2.ORIENTATION_VERTICAL
@@ -31,6 +40,27 @@ class MainActivityTab2 : AppCompatActivity() {
         viewPager.adapter = viewPagerAdapter
 
         fetchTrendingData()
+
+        // Initialize ShakeDetector
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+        shakeDetector = ShakeDetector(this)
+        sensorManager.registerListener(shakeDetector, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sensorManager.unregisterListener(shakeDetector)
+    }
+
+    override fun onShake() {
+        AlertDialog.Builder(this)
+            .setMessage("진짜로?")
+            .setPositiveButton("예") { _, _ ->
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+            .setNegativeButton("아니요", null)
+            .show()
     }
 
     private fun fetchTrendingData() {

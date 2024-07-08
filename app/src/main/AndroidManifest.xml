@@ -63,13 +63,8 @@
         <activity
             android:name=".tab2.MainActivityTab2"
             android:exported="true" />
-        <activity android:name=".MainMenuActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".SplashActivity2"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
     </application>
 </manifest>

@@ -1,11 +1,15 @@
 package com.example.madcamp_week2
 
+import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
@@ -24,11 +28,14 @@ import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShakeDetector.OnShakeListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private lateinit var userRepository: UserRepository
     private lateinit var sessionManager: SessionManager
+
+    private lateinit var sensorManager: SensorManager
+    private lateinit var shakeDetector: ShakeDetector
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +48,26 @@ class MainActivity : AppCompatActivity() {
         setupFullscreen()
         setupViewPager()
         loadUserData()
+
+        // Initialize ShakeDetector
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+        shakeDetector = ShakeDetector(this)
+        sensorManager.registerListener(shakeDetector, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sensorManager.unregisterListener(shakeDetector)
+    }
+
+    override fun onShake() {
+        AlertDialog.Builder(this)
+            .setMessage("진짜로?")
+            .setPositiveButton("예") { _, _ ->
+                startActivity(Intent(this, SplashActivity2::class.java))
+            }
+            .setNegativeButton("아니요", null)
+            .show()
     }
 
     private fun setupFullscreen() {

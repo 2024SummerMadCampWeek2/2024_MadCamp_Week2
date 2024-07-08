@@ -3,12 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="#000000">
 
-    <Button
-        android:id="@+id/navigateButton"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to ViewPager2 Page" />
+        android:text="도파민"
+        android:textSize="60dp"
+        android:textColor="#FFFFFF"
+        android:fontFamily="@font/noto" />
 
 </LinearLayout>
