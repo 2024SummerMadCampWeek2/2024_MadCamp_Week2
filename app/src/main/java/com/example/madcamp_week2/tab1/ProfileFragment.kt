@@ -13,6 +13,8 @@ import com.example.madcamp_week2.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
 import android.util.Base64
 import android.graphics.BitmapFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
@@ -62,22 +64,37 @@ class ProfileFragment : Fragment() {
                 binding.userProfileImageView.setImageBitmap(bitmap)
             } catch (e: IllegalArgumentException) {
                 Log.e("ProfileFragment", "Error decoding Base64 string", e)
-                // 여기에 기본 이미지를 설정하는 코드를 추가할 수 있습니다.
             }
         }
-        readBooksAdapter.submitList(userData.read_books)
-        toReadBooksAdapter.submitList(userData.reviewed_books.map { it.ISBN })
+
+        lifecycleScope.launch {
+            val readBooks = loadBookDetails(userData.reviewed_books.mapNotNull { it?.ISBN })
+            val toReadBooks = loadBookDetails(userData.read_books)
+
+            withContext(Dispatchers.Main) {
+                readBooksAdapter.submitList(readBooks)
+                toReadBooksAdapter.submitList(toReadBooks)
+            }
+        }
+
         Log.d("ProfileFragment", "User data updated: $userData")
     }
 
+    private suspend fun loadBookDetails(isbnList: List<String>): List<Pair<String, String?>> = withContext(Dispatchers.IO) {
+        isbnList.map { isbn ->
+            val imageUrl = NaverAPI.getBookImageByISBN(isbn)
+            isbn to imageUrl
+        }
+    }
+
     private fun setupRecyclerViews() {
-        readBooksAdapter = BookListAdapter()
+        readBooksAdapter = BookListAdapter(true) // true for read books
         binding.readBooksRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = readBooksAdapter
         }
 
-        toReadBooksAdapter = BookListAdapter()
+        toReadBooksAdapter = BookListAdapter(false) // false for to-read books
         binding.toReadBooksRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = toReadBooksAdapter

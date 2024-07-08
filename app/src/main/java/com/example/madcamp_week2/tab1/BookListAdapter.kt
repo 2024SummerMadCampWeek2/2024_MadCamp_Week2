@@ -1,13 +1,16 @@
 package com.example.madcamp_week2.tab1
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.madcamp_week2.R
 import com.example.madcamp_week2.databinding.ItemBookSmallBinding
 
-class BookListAdapter : ListAdapter<String, BookListAdapter.BookViewHolder>(BookDiffCallback()) {
+class BookListAdapter(private val isReadBooks: Boolean) : ListAdapter<Pair<String, String?>, BookListAdapter.BookViewHolder>(BookDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val binding = ItemBookSmallBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -18,21 +21,37 @@ class BookListAdapter : ListAdapter<String, BookListAdapter.BookViewHolder>(Book
         holder.bind(getItem(position))
     }
 
-    class BookViewHolder(private val binding: ItemBookSmallBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(isbn: String) {
-            // ISBN을 사용하여 책 정보를 가져오는 로직 구현 필요
-            // 예: API 호출 또는 로컬 데이터베이스에서 조회
-            // 여기서는 간단히 ISBN만 표시
-            binding.bookTitleTextView.text = isbn
+    inner class BookViewHolder(private val binding: ItemBookSmallBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(bookData: Pair<String, String?>) {
+            val (isbn, imageUrl) = bookData
+
+            if (imageUrl != null) {
+                Glide.with(binding.root.context)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.book_placeholder) // 플레이스홀더 이미지 추가
+                    .error(R.drawable.book_error) // 에러 이미지 추가
+                    .into(binding.bookCoverImageView)
+            } else {
+                binding.bookCoverImageView.setImageResource(R.drawable.book_placeholder)
+            }
+
+            binding.bookTitleTextView.text = isbn // 임시로 ISBN 표시
+
+            if (isReadBooks) {
+                binding.bookRatingTextView.visibility = View.VISIBLE
+                // 여기에 평점 표시 로직을 추가할 수 있습니다.
+            } else {
+                binding.bookRatingTextView.visibility = View.GONE
+            }
         }
     }
 
-    class BookDiffCallback : DiffUtil.ItemCallback<String>() {
-        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
-            return oldItem == newItem
+    class BookDiffCallback : DiffUtil.ItemCallback<Pair<String, String?>>() {
+        override fun areItemsTheSame(oldItem: Pair<String, String?>, newItem: Pair<String, String?>): Boolean {
+            return oldItem.first == newItem.first
         }
 
-        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
+        override fun areContentsTheSame(oldItem: Pair<String, String?>, newItem: Pair<String, String?>): Boolean {
             return oldItem == newItem
         }
     }

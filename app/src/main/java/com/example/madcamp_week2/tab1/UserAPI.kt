@@ -2,6 +2,7 @@ package com.example.madcamp_week2.tab1
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -15,7 +16,7 @@ interface UserAPI {
         @Path("username") username: String,
         @Part("userData") userData: RequestBody,
         @Part profileImage: MultipartBody.Part?
-    ): Call<UserData>
+    ): Call<ResponseBody>
 
     @POST("users")
     fun createUser(@Body userData: UserData): Call<UserData>
@@ -34,7 +35,7 @@ data class UserData(
 
 data class ReviewedBook(
     val ISBN: String,
-    val star: Int,
+    val star: Double,
     val review: String,
     val review_date: String
 )

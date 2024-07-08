@@ -1,6 +1,9 @@
 package com.example.madcamp_week2.tab1
 
 import android.os.Parcelable
+import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -41,9 +44,24 @@ interface NaverAPI {
 
             return retrofit.create(NaverAPI::class.java)
         }
+
+        suspend fun getBookImageByISBN(isbn: String): String? {
+            return withContext(Dispatchers.IO) {
+                try {
+                    val response = create().searchBooks("isbn:$isbn", 1, 1).execute()
+                    if (response.isSuccessful) {
+                        response.body()?.items?.firstOrNull()?.image
+                    } else {
+                        null
+                    }
+                } catch (e: Exception) {
+                    Log.e("NaverAPI", "Error searching book image by ISBN", e)
+                    null
+                }
+            }
+        }
     }
 }
-
 
 data class BookSearchResponse(
     val lastBuildDate: String,
@@ -60,5 +78,6 @@ data class Book(
     val author: String,
     val publisher: String,
     val pubdate: String,
-    val isbn: String
+    val isbn: String,
+    var rating: Float = 0f
 ) : Parcelable

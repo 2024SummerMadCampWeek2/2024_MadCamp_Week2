@@ -8,6 +8,8 @@ import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.json.JSONArray
+import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -40,24 +42,35 @@ class UserRepository(context: Context) {
 
     suspend fun updateUser(username: String, userData: UserData, imageByteArray: ByteArray?): Boolean = withContext(Dispatchers.IO) {
         try {
-            // MultipartBody.Part로 이미지 파일 생성
+            val userDataJson = JSONObject().apply {
+                put("name", userData.name)
+                put("description", userData.description)
+                put("reviewed_books", JSONArray(userData.reviewed_books.map { reviewedBook ->
+                    JSONObject().apply {
+                        put("ISBN", reviewedBook?.ISBN)
+                        put("star", reviewedBook?.star)
+                        put("review", reviewedBook?.review)
+                        put("review_date", reviewedBook?.review_date)
+                    }
+                }))
+                put("read_books", JSONArray(userData.read_books))
+            }.toString()
+
+            val userDataPart = RequestBody.create("application/json".toMediaTypeOrNull(), userDataJson)
+
             val imagePart = imageByteArray?.let { bytes ->
                 val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), bytes)
                 MultipartBody.Part.createFormData("profileImage", "profile.jpg", requestFile)
             }
 
-            // UserData를 JSON으로 변환
-            val userDataJson = gson.toJson(userData)
-            val userDataPart = RequestBody.create("application/json".toMediaTypeOrNull(), userDataJson)
-
             val response = userAPI.updateUser(username, userDataPart, imagePart).execute()
             if (response.isSuccessful) {
-                Log.d("UserRepository", "User updated successfully")
+                Log.d("UserRepository", "User updated successfully on server")
                 saveUserLocally(userData)
                 true
             } else {
                 val errorBody = response.errorBody()?.string()
-                Log.e("UserRepository", "Failed to update user. Status Code: ${response.code()}, Error: $errorBody")
+                Log.e("UserRepository", "Failed to update user on server. Status Code: ${response.code()}, Error: $errorBody")
                 false
             }
         } catch (e: Exception) {
@@ -65,7 +78,6 @@ class UserRepository(context: Context) {
             false
         }
     }
-
     suspend fun createUser(userData: UserData): Boolean = withContext(Dispatchers.IO) {
         try {
             Log.d("UserRepository", "Attempting to create user with data: $userData")
@@ -84,7 +96,6 @@ class UserRepository(context: Context) {
             false
         }
     }
-
 
     private fun saveUserLocally(userData: UserData) {
         val userEntity = UserEntity(
@@ -112,5 +123,9 @@ class UserRepository(context: Context) {
             reviewed_books = gson.fromJson(entity.reviewedBooks, Array<ReviewedBook>::class.java).toList(),
             read_books = gson.fromJson(entity.readBooks, Array<String>::class.java).toList()
         )
+    }
+
+    suspend fun updateLocalUser(userData: UserData) = withContext(Dispatchers.IO) {
+        saveUserLocally(userData)
     }
 }
