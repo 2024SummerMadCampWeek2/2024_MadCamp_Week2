@@ -1,4 +1,4 @@
-package com.example.madcamp_week2
+package com.example.madcamp_week2.tab1
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

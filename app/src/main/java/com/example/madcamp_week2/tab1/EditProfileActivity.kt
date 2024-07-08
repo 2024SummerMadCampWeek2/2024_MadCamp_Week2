@@ -1,6 +1,5 @@
-package com.example.madcamp_week2
+package com.example.madcamp_week2.tab1
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

@@ -1,10 +1,11 @@
-package com.example.madcamp_week2
+package com.example.madcamp_week2.tab1
 
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.example.madcamp_week2.R
 import com.example.madcamp_week2.databinding.ActivityBookDetailBinding
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -50,12 +51,14 @@ class BookDetailActivity : AppCompatActivity() {
                         val userData = userRepository.getLocalUser(name)
                         userData?.let { user ->
                             val updatedReviewedBooks = user.reviewed_books.toMutableList()
-                            updatedReviewedBooks.add(ReviewedBook(
+                            updatedReviewedBooks.add(
+                                ReviewedBook(
                                 ISBN = book.isbn,
                                 star = rating.toInt(),
                                 review = review,
                                 review_date = LocalDate.now().toString()
-                            ))
+                            )
+                            )
                             val updatedUserData = user.copy(reviewed_books = updatedReviewedBooks)
                             val updated = userRepository.updateUser(name, updatedUserData, null) // null for imageByteArray
                             if (updated) {

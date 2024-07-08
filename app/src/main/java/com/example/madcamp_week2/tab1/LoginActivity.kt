@@ -1,10 +1,10 @@
-package com.example.madcamp_week2
+package com.example.madcamp_week2.tab1
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.madcamp_week2.MainActivity
 import com.example.madcamp_week2.databinding.ActivityLoginBinding
-import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
