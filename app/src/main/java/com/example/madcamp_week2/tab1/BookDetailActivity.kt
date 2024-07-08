@@ -30,6 +30,7 @@ class BookDetailActivity : AppCompatActivity() {
 
         setupRatingAndReview()
         setupSaveButton()
+        loadExistingReview()
     }
 
     private fun displayBookDetails(book: Book) {
@@ -51,20 +52,25 @@ class BookDetailActivity : AppCompatActivity() {
                         val userData = userRepository.getLocalUser(name)
                         userData?.let { user ->
                             val updatedReviewedBooks = user.reviewed_books.toMutableList()
-                            updatedReviewedBooks.add(
-                                ReviewedBook(
+                            val existingReviewIndex = updatedReviewedBooks.indexOfFirst { it.ISBN == book.isbn }
+                            val newReview = ReviewedBook(
                                 ISBN = book.isbn,
                                 star = rating.toInt(),
                                 review = review,
                                 review_date = LocalDate.now().toString()
                             )
-                            )
-                            val updatedUserData = user.copy(reviewed_books = updatedReviewedBooks)
-                            val updated = userRepository.updateUser(name, updatedUserData, null) // null for imageByteArray
-                            if (updated) {
-                                Log.d("BookDetailActivity", "Review added successfully")
+                            if (existingReviewIndex != -1) {
+                                updatedReviewedBooks[existingReviewIndex] = newReview
                             } else {
-                                Log.e("BookDetailActivity", "Failed to add review")
+                                updatedReviewedBooks.add(newReview)
+                            }
+                            val updatedUserData = user.copy(reviewed_books = updatedReviewedBooks)
+                            val updated = userRepository.updateUser(name, updatedUserData, null)
+                            if (updated) {
+                                Log.d("BookDetailActivity", "Review added/updated successfully")
+                                userRepository.updateLocalUser(updatedUserData)
+                            } else {
+                                Log.e("BookDetailActivity", "Failed to add/update review")
                             }
                         }
                     }
@@ -89,10 +95,11 @@ class BookDetailActivity : AppCompatActivity() {
                             }
                         }
                         val updatedUserData = user.copy(read_books = updatedReadBooks)
-                        val updated = userRepository.updateUser(name, updatedUserData, null) // null for imageByteArray
+                        val updated = userRepository.updateUser(name, updatedUserData, null)
                         if (updated) {
                             isBookSaved = !isBookSaved
                             updateSaveButtonUI()
+                            userRepository.updateLocalUser(updatedUserData)
                             Log.d("BookDetailActivity", "Book saved status updated: $isBookSaved")
                         } else {
                             Log.e("BookDetailActivity", "Failed to update book saved status")
@@ -110,8 +117,7 @@ class BookDetailActivity : AppCompatActivity() {
         )
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun loadExistingReview() {
         lifecycleScope.launch {
             val username = sessionManager.getUserName()
             username?.let { name ->
@@ -119,6 +125,14 @@ class BookDetailActivity : AppCompatActivity() {
                 userData?.let { user ->
                     isBookSaved = user.read_books.contains(currentBook?.isbn)
                     updateSaveButtonUI()
+
+                    currentBook?.let { book ->
+                        val existingReview = user.reviewed_books.find { it.ISBN == book.isbn }
+                        existingReview?.let {
+                            binding.ratingBar.rating = it.star.toFloat()
+                            binding.reviewEditText.setText(it.review)
+                        }
+                    }
                 }
             }
         }

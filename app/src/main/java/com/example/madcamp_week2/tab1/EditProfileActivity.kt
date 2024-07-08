@@ -1,5 +1,6 @@
 package com.example.madcamp_week2.tab1
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -74,7 +75,10 @@ class EditProfileActivity : AppCompatActivity() {
 
                 val updatedUserData = currentUserData?.copy(
                     name = name,
-                    description = bio
+                    description = bio,
+                    profileImage = imageByteArray?.let {
+                        android.util.Base64.encodeToString(it, android.util.Base64.DEFAULT)
+                    } ?: currentUserData.profileImage
                 ) ?: UserData(
                     name = name,
                     profileImage = null,
