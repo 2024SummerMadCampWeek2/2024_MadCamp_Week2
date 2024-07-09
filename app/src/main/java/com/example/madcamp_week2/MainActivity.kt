@@ -94,6 +94,7 @@ class MainActivity : AppCompatActivity(), ShakeDetector.OnShakeListener {
         binding.viewPager.adapter = viewPagerAdapter
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
     }
+
     private suspend fun downloadImageAsByteArray(imageUrl: String): ByteArray {
         return withContext(Dispatchers.IO) {
             try {
@@ -116,6 +117,7 @@ class MainActivity : AppCompatActivity(), ShakeDetector.OnShakeListener {
             }
         }
     }
+
     private fun loadUserData() {
         UserApiClient.instance.me { user, error ->
             if (error != null) {

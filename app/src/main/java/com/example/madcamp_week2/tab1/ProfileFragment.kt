@@ -1,5 +1,6 @@
 package com.example.madcamp_week2.tab1
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.madcamp_week2.R
 import com.example.madcamp_week2.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
@@ -30,6 +32,12 @@ class ProfileFragment : Fragment() {
     private lateinit var readBooksAdapter: ReadBooksAdapter
     private lateinit var toReadBooksAdapter: ToReadBooksAdapter
     private lateinit var sessionManager: SessionManager
+    private var profileImageData: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
@@ -67,7 +75,7 @@ class ProfileFragment : Fragment() {
     private fun setupEditButton() {
         binding.editProfileButton.setOnClickListener {
             val intent = Intent(activity, EditProfileActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, EDIT_PROFILE_REQUEST)
         }
     }
 
@@ -76,7 +84,13 @@ class ProfileFragment : Fragment() {
             val username = sessionManager.getUserName()
             username?.let {
                 val userData = userRepository.getLocalUser(it)
-                userData?.let { updateUserData(it) }
+                userData?.let {
+                    updateUserData(it)
+                    if (profileImageData != it.profileImage) {
+                        profileImageData = it.profileImage
+                        updateProfileImage(profileImageData)
+                    }
+                }
 
                 val readBooks = userRepository.getReadBooks(it)
                 val toReadBooks = userRepository.getToReadBooks(it)
@@ -92,11 +106,26 @@ class ProfileFragment : Fragment() {
     fun updateUserData(userData: UserData) {
         binding.userNameTextView.text = userData.name
         binding.userBioTextView.text = userData.description ?: "한 줄 소개를 입력해주세요."
-        userData.profileImage?.let { base64String ->
+        if (profileImageData != userData.profileImage) {
+            profileImageData = userData.profileImage
+            updateProfileImage(profileImageData)
+        }
+    }
+
+    private fun updateProfileImage(imageData: String?) {
+        imageData?.let { base64String ->
             val imageBytes = android.util.Base64.decode(base64String, android.util.Base64.DEFAULT)
             Glide.with(this)
                 .load(imageBytes)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(binding.userProfileImageView.findViewById(R.id.userProfileImageView))
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == EDIT_PROFILE_REQUEST && resultCode == Activity.RESULT_OK) {
+            loadUserProfile()
         }
     }
 
@@ -108,6 +137,10 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val EDIT_PROFILE_REQUEST = 1
     }
 }
 
@@ -173,7 +206,6 @@ class ToReadBooksAdapter : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolde
     }
 }
 
-
 class GridSpacingItemDecoration(private val spanCount: Int, private val spacing: Int, private val includeEdge: Boolean) : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val position = parent.getChildAdapterPosition(view)
@@ -197,7 +229,6 @@ class GridSpacingItemDecoration(private val spanCount: Int, private val spacing:
     }
 }
 
-// LinearLayoutManager (horizontal) 용 ItemDecoration
 class HorizontalSpaceItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         if (parent.getChildAdapterPosition(view) != parent.adapter?.itemCount?.minus(1)) {
