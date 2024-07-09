@@ -6,10 +6,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.res.ResourcesCompat
+import com.example.madcamp_week2.R
 import com.example.madcamp_week2.databinding.FragmentSearchBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,6 +35,11 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         setupSearchView()
+
+        // SearchView의 텍스트 스타일 변경
+        val searchText = binding.searchView.findViewById<TextView>(androidx.appcompat.R.id.search_src_text)
+        searchText.typeface = ResourcesCompat.getFont(requireContext(), R.font.kopu)
+        searchText.textSize = 20f  // 필요에 따라 텍스트 크기 조정
     }
 
     private fun setupRecyclerView() {

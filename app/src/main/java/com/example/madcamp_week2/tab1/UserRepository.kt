@@ -135,4 +135,82 @@ class UserRepository(context: Context) {
     suspend fun updateLocalUser(userData: UserData) = withContext(Dispatchers.IO) {
         saveUserLocally(userData)
     }
+
+    suspend fun getReadBooks(username: String): List<Pair<String, String?>> = withContext(Dispatchers.IO) {
+        val userData = getLocalUser(username)
+        val readBooks = userData?.read_books?.take(10)?.reversed() ?: emptyList()
+        fetchBookImages(readBooks)
+    }
+
+    suspend fun getToReadBooks(username: String): List<Pair<String, String?>> = withContext(Dispatchers.IO) {
+        val userData = getLocalUser(username)
+        val toReadBooks = userData?.reviewed_books
+            ?.sortedByDescending { it.review_date }
+            ?.reversed()// 리뷰 날짜로 정렬
+            ?.take(6)
+            ?.map { it.ISBN }
+            ?: emptyList()
+        fetchBookImages(toReadBooks)
+    }
+
+    suspend fun addReadBook(username: String, isbn: String): Boolean = withContext(Dispatchers.IO) {
+        val userData = getLocalUser(username)
+        userData?.let {
+            val updatedReadBooks = listOf(isbn) + it.read_books
+            val updatedUserData = it.copy(read_books = updatedReadBooks)
+            updateUser(username, updatedUserData, null)
+        } ?: false
+    }
+
+    suspend fun addToReadBook(username: String, reviewedBook: ReviewedBook): Boolean = withContext(Dispatchers.IO) {
+        val userData = getLocalUser(username)
+        userData?.let {
+            val updatedReviewedBooks = listOf(reviewedBook) + it.reviewed_books
+            val updatedUserData = it.copy(reviewed_books = updatedReviewedBooks)
+            updateUser(username, updatedUserData, null)
+        } ?: false
+    }
+
+    suspend fun removeReadBook(username: String, isbn: String): Boolean = withContext(Dispatchers.IO) {
+        val userData = getLocalUser(username)
+        userData?.let {
+            val updatedReadBooks = it.read_books.filter { it != isbn }
+            val updatedReviewedBooks = it.reviewed_books.filter { it.ISBN != isbn }
+            val updatedUserData = it.copy(
+                read_books = updatedReadBooks,
+                reviewed_books = updatedReviewedBooks
+            )
+            val updated = updateUser(username, updatedUserData, null)
+            if (updated) {
+                updateLocalUser(updatedUserData)
+            }
+            updated
+        } ?: false
+    }
+
+    suspend fun updateOrAddReviewedBook(username: String, reviewedBook: ReviewedBook): Boolean = withContext(Dispatchers.IO) {
+        val userData = getLocalUser(username)
+        userData?.let {
+            val updatedReviewedBooks = it.reviewed_books.filter { it.ISBN != reviewedBook.ISBN } + reviewedBook
+            val updatedReadBooks = if (!it.read_books.contains(reviewedBook.ISBN)) {
+                it.read_books + reviewedBook.ISBN
+            } else {
+                it.read_books
+            }
+            val updatedUserData = it.copy(
+                reviewed_books = updatedReviewedBooks,
+                read_books = updatedReadBooks
+            )
+            val updated = updateUser(username, updatedUserData, null)
+            if (updated) {
+                updateLocalUser(updatedUserData)
+            }
+            updated
+        } ?: false
+    }
+
+    suspend fun refreshLocalUser(username: String) = withContext(Dispatchers.IO) {
+        val updatedUserData = getUser(username)
+        updatedUserData?.let { updateLocalUser(it) }
+    }
 }

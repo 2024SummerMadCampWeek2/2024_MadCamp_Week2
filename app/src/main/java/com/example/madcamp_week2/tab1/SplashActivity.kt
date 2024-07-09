@@ -36,6 +36,6 @@ class SplashActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
-        }, 3000) // 3초 지연
+        }, 500) // 3초 지연
     }
 }

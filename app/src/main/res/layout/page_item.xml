@@ -9,7 +9,8 @@
     <ImageView
         android:id="@+id/thumbnail1"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         tools:src="@tools:sample/avatars" />
 
     <TextView
@@ -17,16 +18,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:text="Keyword 1"
+        android:layout_marginTop="4dp"
+        android:text=""
         android:textColor="#FFFFFF"
         android:textSize="45sp"
-        android:fontFamily="@font/noto"
+        android:fontFamily="@font/kopu"
         tools:text="Sample Keyword" />
 
     <ImageView
         android:id="@+id/thumbnail2"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         tools:src="@tools:sample/avatars" />
 
     <TextView
@@ -34,16 +37,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:text="Keyword 2"
+        android:layout_marginTop="4dp"
+        android:text= ""
         android:textColor="#FFFFFF"
         android:textSize="45sp"
-        android:fontFamily="@font/noto"
+        android:fontFamily="@font/kopu"
         tools:text="Sample Keyword" />
 
     <ImageView
         android:id="@+id/thumbnail3"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         tools:src="@tools:sample/avatars" />
 
 </LinearLayout>
