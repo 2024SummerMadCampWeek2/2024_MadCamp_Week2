@@ -145,9 +145,10 @@ class UserRepository(context: Context) {
     suspend fun getToReadBooks(username: String): List<Pair<String, String?>> = withContext(Dispatchers.IO) {
         val userData = getLocalUser(username)
         val toReadBooks = userData?.reviewed_books
-            ?.sortedByDescending { it.review_date }
-            ?.reversed()// 리뷰 날짜로 정렬
+            ?.sortedByDescending { it.review_date }?.reversed()
+            // 리뷰 날짜로 정렬
             ?.take(6)
+
             ?.map { it.ISBN }
             ?: emptyList()
         fetchBookImages(toReadBooks)
