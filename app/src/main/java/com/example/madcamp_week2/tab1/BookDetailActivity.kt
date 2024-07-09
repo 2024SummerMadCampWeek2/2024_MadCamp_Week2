@@ -42,7 +42,7 @@ class BookDetailActivity : AppCompatActivity() {
         binding.bookTitleTextView.text = book.title
         binding.bookAuthorTextView.text = book.author
         binding.bookPublisherTextView.text = book.publisher
-        binding.bookPubdateTextView.text = book.pubdate
+        binding.bookPubdateTextView.text = book.pubdate.substring(0, 4)
         Glide.with(this).load(book.image).into(binding.bookCoverImageView)
     }
 

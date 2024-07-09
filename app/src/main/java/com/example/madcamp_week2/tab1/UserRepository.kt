@@ -214,4 +214,26 @@ class UserRepository(context: Context) {
         val updatedUserData = getUser(username)
         updatedUserData?.let { updateLocalUser(it) }
     }
+
+    suspend fun getBookByISBN(isbn: String): Book? = withContext(Dispatchers.IO) {
+        try {
+            val response = NaverAPI.create().searchBooks(isbn, 1, 1).execute()
+            if (response.isSuccessful) {
+                response.body()?.items?.firstOrNull()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Error fetching book by ISBN", e)
+            null
+        }
+    }
+
+    suspend fun getAllReviewedBooks(username: String): List<Pair<String, String?>> = withContext(Dispatchers.IO) {
+        val userData = getLocalUser(username)
+        val reviewedBooks = userData?.reviewed_books?.map { it.ISBN } ?: emptyList()
+        fetchBookImages(reviewedBooks)
+    }
 }
+
+

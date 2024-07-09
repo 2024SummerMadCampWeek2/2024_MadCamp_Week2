@@ -50,6 +50,7 @@ class ProfileFragment : Fragment() {
         sessionManager = SessionManager(requireContext())
         setupRecyclerViews()
         setupEditButton()
+        setupOverlayButton() // 이 줄을 추가합니다
         loadUserProfile()
     }
 
@@ -64,7 +65,10 @@ class ProfileFragment : Fragment() {
             adapter = readBooksAdapter
         }
 
-        toReadBooksAdapter = ToReadBooksAdapter()
+        toReadBooksAdapter = ToReadBooksAdapter { isbn ->
+            // 책 프로필로 이동하는 로직
+            navigateToBookDetail(isbn)
+        }
         binding.toReadBooksRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = toReadBooksAdapter
@@ -72,10 +76,28 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun navigateToBookDetail(isbn: String) {
+        lifecycleScope.launch {
+            val book = userRepository.getBookByISBN(isbn)
+            book?.let {
+                val intent = Intent(requireContext(), BookDetailActivity::class.java)
+                intent.putExtra("book", it)
+                startActivity(intent)
+            }
+        }
+    }
+
     private fun setupEditButton() {
         binding.editProfileButton.setOnClickListener {
             val intent = Intent(activity, EditProfileActivity::class.java)
             startActivityForResult(intent, EDIT_PROFILE_REQUEST)
+        }
+    }
+
+    private fun setupOverlayButton() {
+        binding.overlayButton.setOnClickListener {
+            val intent = Intent(requireContext(), ReadBooksActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -175,7 +197,7 @@ class ReadBooksAdapter : RecyclerView.Adapter<ReadBooksAdapter.BookViewHolder>()
     }
 }
 
-class ToReadBooksAdapter : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolder>() {
+class ToReadBooksAdapter(private val onItemClick: (String) -> Unit) : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolder>() {
     private var books: List<Pair<String, String?>> = listOf()
 
     fun setBooks(newBooks: List<Pair<String, String?>>) {
@@ -194,7 +216,7 @@ class ToReadBooksAdapter : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolde
 
     override fun getItemCount() = books.size
 
-    class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imageView: ImageView = itemView.findViewById(R.id.bookImageView)
 
         fun bind(book: Pair<String, String?>) {
@@ -202,6 +224,10 @@ class ToReadBooksAdapter : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolde
                 .load(book.second)
                 .placeholder(R.drawable.book_placeholder)
                 .into(imageView)
+
+            itemView.setOnClickListener {
+                onItemClick(book.first)  // ISBN을 전달
+            }
         }
     }
 }
