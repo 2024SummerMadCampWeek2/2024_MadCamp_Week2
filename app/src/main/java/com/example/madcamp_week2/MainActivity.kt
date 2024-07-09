@@ -9,8 +9,10 @@ import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
@@ -61,13 +63,20 @@ class MainActivity : AppCompatActivity(), ShakeDetector.OnShakeListener {
     }
 
     override fun onShake() {
-        AlertDialog.Builder(this)
-            .setMessage("진짜로?")
+        val alertDialog = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
+            .setMessage("정말..들어가시겠습니까?")
             .setPositiveButton("예") { _, _ ->
                 startActivity(Intent(this, SplashActivity2::class.java))
             }
-            .setNegativeButton("아니요", null)
-            .show()
+            .setNegativeButton("아니오", null)
+            .create()
+
+        alertDialog.show()
+
+        // Apply custom font to the message text
+        val messageTextView = alertDialog.findViewById<TextView>(android.R.id.message)
+        val customFont = ResourcesCompat.getFont(this, R.font.kopu)
+        messageTextView?.typeface = customFont
     }
 
     private fun setupFullscreen() {
