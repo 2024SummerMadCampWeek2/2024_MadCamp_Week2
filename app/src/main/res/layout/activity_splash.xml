@@ -5,13 +5,12 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <ImageView
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="책방"
-        android:textSize="60sp"
-        android:fontFamily="@font/kopu"
-        android:textColor="@android:color/black"
+        android:src="@drawable/splash1"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

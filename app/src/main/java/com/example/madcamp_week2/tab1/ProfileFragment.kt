@@ -1,29 +1,35 @@
 package com.example.madcamp_week2.tab1
 
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.madcamp_week2.R
 import com.example.madcamp_week2.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
-import android.util.Base64
-import android.graphics.BitmapFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
+import com.google.android.flexbox.AlignItems
 
 class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private lateinit var userRepository: UserRepository
-    private lateinit var readBooksAdapter: BookListAdapter
-    private lateinit var toReadBooksAdapter: BookListAdapter
+    private lateinit var readBooksAdapter: ReadBooksAdapter
+    private lateinit var toReadBooksAdapter: ToReadBooksAdapter
     private lateinit var sessionManager: SessionManager
-    private var pendingUserData: UserData? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
@@ -39,59 +45,22 @@ class ProfileFragment : Fragment() {
         loadUserProfile()
     }
 
-    private fun loadUserProfile() {
-        lifecycleScope.launch {
-            val username = sessionManager.getUserName()
-            username?.let {
-                val userData = userRepository.getLocalUser(it)
-                userData?.let { updateUserData(it) }
-            }
-        }
-    }
-
-
-    fun updateUserData(userData: UserData) {
-        if (_binding == null) {
-            pendingUserData = userData
-            return
-        }
-
-        binding.userNameTextView.text = userData.name
-        binding.userBioTextView.text = userData.description ?: "한 줄 소개를 입력해주세요."
-        userData.profileImage?.let { base64String ->
-            try {
-                val imageBytes = Base64.decode(base64String, Base64.DEFAULT)
-                val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-                binding.userProfileImageView.setImageBitmap(bitmap)
-            } catch (e: IllegalArgumentException) {
-                Log.e("ProfileFragment", "Error decoding Base64 string", e)
-            }
-        }
-
-        lifecycleScope.launch {
-            val readBooks = userRepository.fetchBookImages(userData.read_books)
-            val toReadBooks = userRepository.fetchBookImages(userData.reviewed_books.mapNotNull { it?.ISBN })
-
-            withContext(Dispatchers.Main) {
-                readBooksAdapter.submitList(readBooks)
-                toReadBooksAdapter.submitList(toReadBooks)
-            }
-        }
-
-        Log.d("ProfileFragment", "User data updated: $userData")
-    }
-
     private fun setupRecyclerViews() {
-        readBooksAdapter = BookListAdapter(true) // true for read books
+        readBooksAdapter = ReadBooksAdapter()
         binding.readBooksRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            val flexboxLayoutManager = FlexboxLayoutManager(context).apply {
+                justifyContent = JustifyContent.CENTER
+                alignItems = AlignItems.CENTER
+            }
+            layoutManager = flexboxLayoutManager
             adapter = readBooksAdapter
         }
 
-        toReadBooksAdapter = BookListAdapter(false) // false for to-read books
+        toReadBooksAdapter = ToReadBooksAdapter()
         binding.toReadBooksRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = toReadBooksAdapter
+            addItemDecoration(HorizontalSpaceItemDecoration(12))
         }
     }
 
@@ -99,6 +68,35 @@ class ProfileFragment : Fragment() {
         binding.editProfileButton.setOnClickListener {
             val intent = Intent(activity, EditProfileActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun loadUserProfile() {
+        lifecycleScope.launch {
+            val username = sessionManager.getUserName()
+            username?.let {
+                val userData = userRepository.getLocalUser(it)
+                userData?.let { updateUserData(it) }
+
+                val readBooks = userRepository.getReadBooks(it)
+                val toReadBooks = userRepository.getToReadBooks(it)
+
+                withContext(Dispatchers.Main) {
+                    readBooksAdapter.setBooks(readBooks)
+                    toReadBooksAdapter.setBooks(toReadBooks)
+                }
+            }
+        }
+    }
+
+    fun updateUserData(userData: UserData) {
+        binding.userNameTextView.text = userData.name
+        binding.userBioTextView.text = userData.description ?: "한 줄 소개를 입력해주세요."
+        userData.profileImage?.let { base64String ->
+            val imageBytes = android.util.Base64.decode(base64String, android.util.Base64.DEFAULT)
+            Glide.with(this)
+                .load(imageBytes)
+                .into(binding.userProfileImageView.findViewById(R.id.userProfileImageView))
         }
     }
 
@@ -110,5 +108,100 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+}
+
+class ReadBooksAdapter : RecyclerView.Adapter<ReadBooksAdapter.BookViewHolder>() {
+    private var books: List<Pair<String, String?>> = listOf()
+
+    fun setBooks(newBooks: List<Pair<String, String?>>) {
+        books = newBooks
+        notifyDataSetChanged()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_read_book, parent, false)
+        return BookViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
+        holder.bind(books[position])
+    }
+
+    override fun getItemCount() = books.size
+
+    class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val imageView: ImageView = itemView.findViewById(R.id.bookImageView)
+
+        fun bind(book: Pair<String, String?>) {
+            Glide.with(itemView.context)
+                .load(book.second)
+                .placeholder(R.drawable.book_placeholder)
+                .into(imageView)
+        }
+    }
+}
+
+class ToReadBooksAdapter : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolder>() {
+    private var books: List<Pair<String, String?>> = listOf()
+
+    fun setBooks(newBooks: List<Pair<String, String?>>) {
+        books = newBooks
+        notifyDataSetChanged()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_to_read_book, parent, false)
+        return BookViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
+        holder.bind(books[position])
+    }
+
+    override fun getItemCount() = books.size
+
+    class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val imageView: ImageView = itemView.findViewById(R.id.bookImageView)
+
+        fun bind(book: Pair<String, String?>) {
+            Glide.with(itemView.context)
+                .load(book.second)
+                .placeholder(R.drawable.book_placeholder)
+                .into(imageView)
+        }
+    }
+}
+
+
+class GridSpacingItemDecoration(private val spanCount: Int, private val spacing: Int, private val includeEdge: Boolean) : RecyclerView.ItemDecoration() {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        val position = parent.getChildAdapterPosition(view)
+        val column = position % spanCount
+
+        if (includeEdge) {
+            outRect.left = spacing - column * spacing / spanCount
+            outRect.right = (column + 1) * spacing / spanCount
+
+            if (position < spanCount) {
+                outRect.top = spacing
+            }
+            outRect.bottom = spacing
+        } else {
+            outRect.left = column * spacing / spanCount
+            outRect.right = spacing - (column + 1) * spacing / spanCount
+            if (position >= spanCount) {
+                outRect.top = spacing
+            }
+        }
+    }
+}
+
+// LinearLayoutManager (horizontal) 용 ItemDecoration
+class HorizontalSpaceItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        if (parent.getChildAdapterPosition(view) != parent.adapter?.itemCount?.minus(1)) {
+            outRect.right = space
+        }
     }
 }

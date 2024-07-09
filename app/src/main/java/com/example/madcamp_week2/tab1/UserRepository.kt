@@ -135,4 +135,34 @@ class UserRepository(context: Context) {
     suspend fun updateLocalUser(userData: UserData) = withContext(Dispatchers.IO) {
         saveUserLocally(userData)
     }
+
+    suspend fun getReadBooks(username: String): List<Pair<String, String?>> = withContext(Dispatchers.IO) {
+        val userData = getLocalUser(username)
+        val readBooks = userData?.read_books?.take(6)?.reversed() ?: emptyList()
+        fetchBookImages(readBooks)
+    }
+
+    suspend fun getToReadBooks(username: String): List<Pair<String, String?>> = withContext(Dispatchers.IO) {
+        val userData = getLocalUser(username)
+        val toReadBooks = userData?.reviewed_books?.take(15)?.map { it.ISBN }?.reversed() ?: emptyList()
+        fetchBookImages(toReadBooks)
+    }
+
+    suspend fun addReadBook(username: String, isbn: String): Boolean = withContext(Dispatchers.IO) {
+        val userData = getLocalUser(username)
+        userData?.let {
+            val updatedReadBooks = listOf(isbn) + it.read_books
+            val updatedUserData = it.copy(read_books = updatedReadBooks)
+            updateUser(username, updatedUserData, null)
+        } ?: false
+    }
+
+    suspend fun addToReadBook(username: String, reviewedBook: ReviewedBook): Boolean = withContext(Dispatchers.IO) {
+        val userData = getLocalUser(username)
+        userData?.let {
+            val updatedReviewedBooks = listOf(reviewedBook) + it.reviewed_books
+            val updatedUserData = it.copy(reviewed_books = updatedReviewedBooks)
+            updateUser(username, updatedUserData, null)
+        } ?: false
+    }
 }
