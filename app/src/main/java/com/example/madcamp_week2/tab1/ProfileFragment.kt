@@ -82,8 +82,8 @@ class ProfileFragment : Fragment() {
                 val toReadBooks = userRepository.getToReadBooks(it)
 
                 withContext(Dispatchers.Main) {
-                    readBooksAdapter.setBooks(readBooks)
-                    toReadBooksAdapter.setBooks(toReadBooks)
+                    readBooksAdapter.setBooks(toReadBooks)
+                    toReadBooksAdapter.setBooks(readBooks)
                 }
             }
         }

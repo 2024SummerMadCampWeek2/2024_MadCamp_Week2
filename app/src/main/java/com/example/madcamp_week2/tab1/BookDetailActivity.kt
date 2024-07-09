@@ -17,6 +17,7 @@ class BookDetailActivity : AppCompatActivity() {
     private var currentBook: Book? = null
     private var isBookSaved = false
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBookDetailBinding.inflate(layoutInflater)
@@ -28,9 +29,13 @@ class BookDetailActivity : AppCompatActivity() {
         currentBook = intent.getParcelableExtra("book")
         currentBook?.let { displayBookDetails(it) }
 
-        setupRatingAndReview()
         setupSaveButton()
         loadExistingReview()
+        binding.backButton.setOnClickListener {
+            setupRatingAndReview()
+            finish()
+        }
+
     }
 
     private fun displayBookDetails(book: Book) {
@@ -42,9 +47,9 @@ class BookDetailActivity : AppCompatActivity() {
     }
 
     private fun setupRatingAndReview() {
-        binding.submitReviewButton.setOnClickListener {
+
             val rating = binding.ratingBar.rating
-            val review = binding.reviewEditText.text.toString()
+            val review = binding.reviewEditText.text.toString().trim() // 앞뒤 공백 제거
             currentBook?.let { book ->
                 lifecycleScope.launch {
                     val username = sessionManager.getUserName()
@@ -53,17 +58,27 @@ class BookDetailActivity : AppCompatActivity() {
                         userData?.let { user ->
                             val updatedReviewedBooks = user.reviewed_books.toMutableList()
                             val existingReviewIndex = updatedReviewedBooks.indexOfFirst { it?.ISBN == book.isbn }
-                            val newReview = ReviewedBook(
-                                ISBN = book.isbn,
-                                star = rating.toDouble(),
-                                review = review,
-                                review_date = LocalDate.now().toString()
-                            )
-                            if (existingReviewIndex != -1) {
-                                updatedReviewedBooks[existingReviewIndex] = newReview
+
+                            if (rating == 0f && review.isEmpty()) {
+                                // 별점이 0이고 리뷰가 비어있으면 리뷰를 제거
+                                if (existingReviewIndex != -1) {
+                                    updatedReviewedBooks.removeAt(existingReviewIndex)
+                                }
                             } else {
-                                updatedReviewedBooks.add(newReview)
+                                // 그렇지 않으면 리뷰를 업데이트하거나 추가
+                                val newReview = ReviewedBook(
+                                    ISBN = book.isbn,
+                                    star = rating.toDouble(),
+                                    review = review,
+                                    review_date = LocalDate.now().toString()
+                                )
+                                if (existingReviewIndex != -1) {
+                                    updatedReviewedBooks[existingReviewIndex] = newReview
+                                } else {
+                                    updatedReviewedBooks.add(newReview)
+                                }
                             }
+
                             val updatedUserData = user.copy(reviewed_books = updatedReviewedBooks)
 
                             // 로그 추가
@@ -71,15 +86,15 @@ class BookDetailActivity : AppCompatActivity() {
 
                             val updated = userRepository.updateUser(name, updatedUserData, null)
                             if (updated) {
-                                Log.d("BookDetailActivity", "Review added/updated successfully")
+                                Log.d("BookDetailActivity", "Review added/updated/removed successfully")
                                 userRepository.updateLocalUser(updatedUserData)
                             } else {
-                                Log.e("BookDetailActivity", "Failed to add/update review")
+                                Log.e("BookDetailActivity", "Failed to add/update/remove review")
                             }
                         }
                     }
                 }
-            }
+
         }
     }
 

@@ -11,31 +11,45 @@
         android:padding="16dp">
 
         <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="50dp"
+            android:layout_height="42dp"
+            android:background="@color/white"
+            android:src="@drawable/ic_back"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
             android:id="@+id/saveButton"
             android:layout_width="50dp"
             android:layout_height="42dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/save"
+            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/bookCoverImageView"
-            android:layout_width="200dp"
-            android:layout_height="300dp"
-            android:layout_marginTop="16dp"
+            android:layout_width="202dp"
+            android:layout_height="307dp"
             android:scaleType="centerCrop"
+            app:layout_constraintTop_toBottomOf="@id/backButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/saveButton" />
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/bookTitleTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:layout_width="351dp"
+            android:layout_height="71dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/noto"
+            android:textColor="@android:color/black"
+            android:textSize="26sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bookCoverImageView" />
@@ -44,7 +58,12 @@
             android:id="@+id/bookAuthorTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/kopu"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bookTitleTextView" />
@@ -53,7 +72,12 @@
             android:id="@+id/bookPublisherTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/kopu"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bookAuthorTextView" />
@@ -62,41 +86,50 @@
             android:id="@+id/bookPubdateTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/kopu"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bookPublisherTextView" />
-
-        <RatingBar
-            android:id="@+id/ratingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:numStars="5"
-            android:stepSize="0.5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bookPubdateTextView" />
 
         <EditText
             android:id="@+id/reviewEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="리뷰를 작성해주세요"
+            android:layout_marginTop="56dp"
+            android:background="@null"
+            android:fontFamily="@font/kopu"
+            android:gravity="center"
+            android:hint="서평을 작성해주세요"
             android:inputType="textMultiLine"
             android:minLines="3"
+            android:padding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ratingBar" />
+            app:layout_constraintTop_toBottomOf="@id/bookPubdateTextView" />
 
-        <Button
-            android:id="@+id/submitReviewButton"
+        <RatingBar
+            android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="리뷰 제출"
+            android:layout_marginTop="36dp"
+            android:isIndicator="false"
+            android:maxHeight="48dp"
+            android:minHeight="48dp"
+            android:numStars="5"
+            android:progressTint="@android:color/holo_orange_light"
+            android:progressTintMode="src_in"
+            android:secondaryProgressTint="@android:color/holo_orange_light"
+            android:secondaryProgressTintMode="src_in"
+            android:stepSize="0.5"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/reviewEditText" />
 
