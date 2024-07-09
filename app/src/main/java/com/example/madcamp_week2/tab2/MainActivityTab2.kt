@@ -5,13 +5,16 @@ import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.madcamp_week2.MainActivity
 import com.example.madcamp_week2.R
 import com.example.madcamp_week2.RetrofitInstance
 import com.example.madcamp_week2.ShakeDetector
+import com.example.madcamp_week2.SplashActivity2
 import com.example.madcamp_week2.Trend
 import com.example.madcamp_week2.VideoItem
 import com.example.madcamp_week2.ViewPagerAdapter
@@ -53,14 +56,20 @@ class MainActivityTab2 : AppCompatActivity(), ShakeDetector.OnShakeListener {
     }
 
     override fun onShake() {
-        AlertDialog.Builder(this)
-            .setMessage("진짜로?")
+        val alertDialog = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
+            .setMessage("그래그래")
             .setPositiveButton("예") { _, _ ->
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
+                startActivity(Intent(this, SplashActivity2::class.java))
             }
-            .setNegativeButton("아니요", null)
-            .show()
+            .setNegativeButton("아니오", null)
+            .create()
+
+        alertDialog.show()
+
+        // Apply custom font to the message text
+        val messageTextView = alertDialog.findViewById<TextView>(android.R.id.message)
+        val customFont = ResourcesCompat.getFont(this, R.font.kopu)
+        messageTextView?.typeface = customFont
     }
 
     private fun fetchTrendingData() {

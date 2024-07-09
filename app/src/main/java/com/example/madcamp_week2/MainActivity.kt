@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity(), ShakeDetector.OnShakeListener {
 
     override fun onShake() {
         val alertDialog = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
-            .setMessage("정말..들어가시겠습니까?")
+            .setMessage("정말... 들어가시겠습니까?")
             .setPositiveButton("예") { _, _ ->
                 startActivity(Intent(this, SplashActivity2::class.java))
             }
