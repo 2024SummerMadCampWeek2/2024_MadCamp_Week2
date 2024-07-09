@@ -17,12 +17,12 @@
         android:id="@+id/keyword1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="4dp"
+        android:gravity="center"
         android:text=""
         android:textColor="#FFFFFF"
         android:textSize="45sp"
-        android:fontFamily="@font/kopu"
+        android:fontFamily="@font/bold"
         tools:text="Sample Keyword" />
 
     <ImageView
@@ -36,12 +36,12 @@
         android:id="@+id/keyword2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="4dp"
+        android:gravity="center"
         android:text= ""
         android:textColor="#FFFFFF"
         android:textSize="45sp"
-        android:fontFamily="@font/kopu"
+        android:fontFamily="@font/bold"
         tools:text="Sample Keyword" />
 
     <ImageView
