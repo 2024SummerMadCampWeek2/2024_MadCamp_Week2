@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -34,11 +33,6 @@ class ProfileFragment : Fragment() {
     private lateinit var sessionManager: SessionManager
     private var profileImageData: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
@@ -50,8 +44,23 @@ class ProfileFragment : Fragment() {
         sessionManager = SessionManager(requireContext())
         setupRecyclerViews()
         setupEditButton()
-        setupOverlayButton() // 이 줄을 추가합니다
+        setupOverlayButton()
         loadUserProfile()
+
+        // Animate UI elements
+        binding.userProfileImageView.alpha = 0f
+        binding.userNameTextView.alpha = 0f
+        binding.userBioTextView.alpha = 0f
+        binding.readBooksRecyclerView.alpha = 0f
+        binding.toReadBooksRecyclerView.alpha = 0f
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            binding.userProfileImageView.animate().alpha(1f).setDuration(1000).start()
+            binding.userNameTextView.animate().alpha(1f).setDuration(1000).start()
+            binding.userBioTextView.animate().alpha(1f).setDuration(1000).start()
+            binding.readBooksRecyclerView.animate().alpha(1f).setDuration(1000).start()
+            binding.toReadBooksRecyclerView.animate().alpha(1f).setDuration(1000).start()
+        }
     }
 
     private fun setupRecyclerViews() {
@@ -83,6 +92,7 @@ class ProfileFragment : Fragment() {
                 val intent = Intent(requireContext(), BookDetailActivity::class.java)
                 intent.putExtra("book", it)
                 startActivity(intent)
+                requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             }
         }
     }
@@ -98,6 +108,7 @@ class ProfileFragment : Fragment() {
         binding.overlayButton.setOnClickListener {
             val intent = Intent(requireContext(), ReadBooksActivity::class.java)
             startActivity(intent)
+            requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
     }
 
@@ -140,7 +151,7 @@ class ProfileFragment : Fragment() {
             Glide.with(this)
                 .load(imageBytes)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(binding.userProfileImageView.findViewById(R.id.userProfileImageView))
+                .into(binding.userProfileImageView)
         }
     }
 
@@ -151,14 +162,14 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        loadUserProfile()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadUserProfile()
     }
 
     companion object {

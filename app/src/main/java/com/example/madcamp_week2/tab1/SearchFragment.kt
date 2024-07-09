@@ -47,6 +47,7 @@ class SearchFragment : Fragment() {
             val intent = Intent(activity, BookDetailActivity::class.java)
             intent.putExtra("book", book)
             startActivity(intent)
+            activity?.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
         val gridLayoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerView.apply {

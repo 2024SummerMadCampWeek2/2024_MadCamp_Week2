@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.madcamp_week2.R
 import com.example.madcamp_week2.databinding.ActivityReadBooksBinding
 import kotlinx.coroutines.launch
 
@@ -25,6 +26,11 @@ class ReadBooksActivity : AppCompatActivity() {
         loadReadBooks()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+    }
+
     private fun setupRecyclerView() {
         readBooksAdapter = ReadBooksGridAdapter { isbn ->
             lifecycleScope.launch {
@@ -33,6 +39,8 @@ class ReadBooksActivity : AppCompatActivity() {
                     val intent = Intent(this@ReadBooksActivity, BookDetailActivity::class.java)
                     intent.putExtra("book", it)
                     startActivity(intent)
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+
                 }
             }
         }

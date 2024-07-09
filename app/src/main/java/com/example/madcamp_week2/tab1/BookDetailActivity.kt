@@ -34,6 +34,7 @@ class BookDetailActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener {
             setupRatingAndReview()
             finish()
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
 
     }
@@ -97,7 +98,10 @@ class BookDetailActivity : AppCompatActivity() {
 
         }
     }
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+    }
     private fun setupSaveButton() {
         binding.saveButton.setOnClickListener {
             lifecycleScope.launch {
