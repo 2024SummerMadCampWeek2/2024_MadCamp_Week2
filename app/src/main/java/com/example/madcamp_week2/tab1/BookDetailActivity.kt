@@ -17,7 +17,6 @@ class BookDetailActivity : AppCompatActivity() {
     private var currentBook: Book? = null
     private var isBookSaved = false
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBookDetailBinding.inflate(layoutInflater)
@@ -35,7 +34,6 @@ class BookDetailActivity : AppCompatActivity() {
             setupRatingAndReview()
             finish()
         }
-
     }
 
     private fun displayBookDetails(book: Book) {
@@ -45,7 +43,6 @@ class BookDetailActivity : AppCompatActivity() {
         binding.bookPubdateTextView.text = book.pubdate
         Glide.with(this).load(book.image).into(binding.bookCoverImageView)
     }
-
     private fun setupRatingAndReview() {
 
             val rating = binding.ratingBar.rating

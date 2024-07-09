@@ -1,5 +1,7 @@
 package com.example.madcamp_week2.tab1
 
+import android.os.Parcel
+import android.os.Parcelable
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -38,4 +40,32 @@ data class ReviewedBook(
     val star: Double,
     val review: String,
     val review_date: String
-)
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString() ?: "",
+        parcel.readDouble(),
+        parcel.readString() ?: "",
+        parcel.readString() ?: ""
+    )
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(ISBN)
+        parcel.writeDouble(star)
+        parcel.writeString(review)
+        parcel.writeString(review_date)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<ReviewedBook> {
+        override fun createFromParcel(parcel: Parcel): ReviewedBook {
+            return ReviewedBook(parcel)
+        }
+
+        override fun newArray(size: Int): Array<ReviewedBook?> {
+            return arrayOfNulls(size)
+        }
+    }
+}

@@ -213,4 +213,10 @@ class UserRepository(context: Context) {
         val updatedUserData = getUser(username)
         updatedUserData?.let { updateLocalUser(it) }
     }
+
+    suspend fun getAllReadBooks(username: String): List<Pair<String, String?>> = withContext(Dispatchers.IO) {
+        val userData = getLocalUser(username)
+        val readBooks = userData?.read_books?.reversed() ?: emptyList()
+        fetchBookImages(readBooks)
+    }
 }

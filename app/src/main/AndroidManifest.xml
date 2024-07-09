@@ -66,5 +66,9 @@
         <activity android:name=".SplashActivity2"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
+        <activity
+            android:name=".tab1.ReadBooksActivity"
+            android:exported="false" />
+
     </application>
 </manifest>

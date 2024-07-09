@@ -64,13 +64,20 @@ class ProfileFragment : Fragment() {
             adapter = readBooksAdapter
         }
 
-        toReadBooksAdapter = ToReadBooksAdapter()
+        toReadBooksAdapter = ToReadBooksAdapter { isbn ->
+            val intent = Intent(activity, BookDetailActivity::class.java).apply {
+                putExtra("isbn", isbn)
+            }
+            startActivity(intent)
+        }
         binding.toReadBooksRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = toReadBooksAdapter
             addItemDecoration(HorizontalSpaceItemDecoration(12))
         }
     }
+
+
 
     private fun setupEditButton() {
         binding.editProfileButton.setOnClickListener {
@@ -175,7 +182,7 @@ class ReadBooksAdapter : RecyclerView.Adapter<ReadBooksAdapter.BookViewHolder>()
     }
 }
 
-class ToReadBooksAdapter : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolder>() {
+class ToReadBooksAdapter(private val onItemClick: (String) -> Unit) : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolder>() {
     private var books: List<Pair<String, String?>> = listOf()
 
     fun setBooks(newBooks: List<Pair<String, String?>>) {
@@ -185,7 +192,7 @@ class ToReadBooksAdapter : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolde
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_to_read_book, parent, false)
-        return BookViewHolder(view)
+        return BookViewHolder(view, onItemClick)
     }
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
@@ -194,7 +201,7 @@ class ToReadBooksAdapter : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolde
 
     override fun getItemCount() = books.size
 
-    class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class BookViewHolder(itemView: View, private val onItemClick: (String) -> Unit) : RecyclerView.ViewHolder(itemView) {
         private val imageView: ImageView = itemView.findViewById(R.id.bookImageView)
 
         fun bind(book: Pair<String, String?>) {
@@ -202,9 +209,16 @@ class ToReadBooksAdapter : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolde
                 .load(book.second)
                 .placeholder(R.drawable.book_placeholder)
                 .into(imageView)
+
+            itemView.setOnClickListener {
+                onItemClick(book.first)
+            }
         }
     }
 }
+
+
+
 
 class GridSpacingItemDecoration(private val spanCount: Int, private val spacing: Int, private val includeEdge: Boolean) : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
