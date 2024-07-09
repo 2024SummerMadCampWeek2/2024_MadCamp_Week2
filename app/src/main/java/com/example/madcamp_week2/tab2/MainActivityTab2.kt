@@ -59,7 +59,7 @@ class MainActivityTab2 : AppCompatActivity(), ShakeDetector.OnShakeListener {
         val alertDialog = AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
             .setMessage("그래그래")
             .setPositiveButton("예") { _, _ ->
-                startActivity(Intent(this, SplashActivity2::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
             }
             .setNegativeButton("아니오", null)
             .create()
