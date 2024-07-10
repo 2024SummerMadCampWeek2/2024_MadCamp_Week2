@@ -145,9 +145,10 @@ class UserRepository(context: Context) {
     suspend fun getToReadBooks(username: String): List<Pair<String, String?>> = withContext(Dispatchers.IO) {
         val userData = getLocalUser(username)
         val toReadBooks = userData?.reviewed_books
-            ?.sortedByDescending { it.review_date }
-            ?.reversed()// 리뷰 날짜로 정렬
+            ?.sortedByDescending { it.review_date }?.reversed()
+            // 리뷰 날짜로 정렬
             ?.take(6)
+
             ?.map { it.ISBN }
             ?: emptyList()
         fetchBookImages(toReadBooks)
@@ -213,4 +214,26 @@ class UserRepository(context: Context) {
         val updatedUserData = getUser(username)
         updatedUserData?.let { updateLocalUser(it) }
     }
+
+    suspend fun getBookByISBN(isbn: String): Book? = withContext(Dispatchers.IO) {
+        try {
+            val response = NaverAPI.create().searchBooks(isbn, 1, 1).execute()
+            if (response.isSuccessful) {
+                response.body()?.items?.firstOrNull()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("UserRepository", "Error fetching book by ISBN", e)
+            null
+        }
+    }
+
+    suspend fun getAllReviewedBooks(username: String): List<Pair<String, String?>> = withContext(Dispatchers.IO) {
+        val userData = getLocalUser(username)
+        val reviewedBooks = userData?.reviewed_books?.map { it.ISBN } ?: emptyList()
+        fetchBookImages(reviewedBooks)
+    }
 }
+
+

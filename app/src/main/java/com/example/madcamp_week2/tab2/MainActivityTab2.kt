@@ -60,6 +60,7 @@ class MainActivityTab2 : AppCompatActivity(), ShakeDetector.OnShakeListener {
             .setMessage("그래그래")
             .setPositiveButton("예") { _, _ ->
                 startActivity(Intent(this, MainActivity::class.java))
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             }
             .setNegativeButton("아니오", null)
             .create()

@@ -34,6 +34,7 @@ class BookDetailActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener {
             setupRatingAndReview()
             finish()
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
 
     }
@@ -42,7 +43,7 @@ class BookDetailActivity : AppCompatActivity() {
         binding.bookTitleTextView.text = book.title
         binding.bookAuthorTextView.text = book.author
         binding.bookPublisherTextView.text = book.publisher
-        binding.bookPubdateTextView.text = book.pubdate
+        binding.bookPubdateTextView.text = book.pubdate.substring(0, 4)
         Glide.with(this).load(book.image).into(binding.bookCoverImageView)
     }
 
@@ -97,7 +98,10 @@ class BookDetailActivity : AppCompatActivity() {
 
         }
     }
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+    }
     private fun setupSaveButton() {
         binding.saveButton.setOnClickListener {
             lifecycleScope.launch {

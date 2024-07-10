@@ -1,21 +1,99 @@
 package com.example.madcamp_week2
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.RotateAnimation
+import android.view.animation.TranslateAnimation
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.madcamp_week2.tab2.MainActivityTab2
 
 class SplashActivity2 : AppCompatActivity() {
+
+    private lateinit var mediaPlayer: MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash2)
 
+        val gifImageView: ImageView = findViewById(R.id.gifImageView)
+        val image1: ImageView = findViewById(R.id.image1)
+        val image2: ImageView = findViewById(R.id.image2)
+        val image3: ImageView = findViewById(R.id.image3)
+        val fireImage: ImageView = findViewById(R.id.fireImage)
+
+        Glide.with(this)
+            .asGif()
+            .load(R.drawable.giff)
+            .into(gifImageView)
+
+        // 페이드 인 애니메이션 설정
+        val fadeIn = AlphaAnimation(0.0f, 1.0f).apply {
+            duration = 1000 // 1초
+            fillAfter = true
+        }
+
+        // 이미지 1, 2, 3 페이드 인
         Handler(Looper.getMainLooper()).postDelayed({
+            image1.visibility = View.VISIBLE
+            image1.startAnimation(fadeIn)
+        }, 1000)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            image2.visibility = View.VISIBLE
+            image2.startAnimation(fadeIn)
+        }, 2000)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            image3.visibility = View.VISIBLE
+            image3.startAnimation(fadeIn)
+        }, 3000)
+
+        // fire.png 회전 및 이동 애니메이션 설정
+        val rotate = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f).apply {
+            duration = 1000
+            repeatCount = Animation.INFINITE
+        }
+
+        val translate = TranslateAnimation(
+            Animation.RELATIVE_TO_PARENT, 0f,
+            Animation.RELATIVE_TO_PARENT, -0.5f,
+            Animation.RELATIVE_TO_PARENT, 0f,
+            Animation.RELATIVE_TO_PARENT, 0.5f
+        ).apply {
+            duration = 2000
+            fillAfter = true
+        }
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            fireImage.visibility = View.VISIBLE
+            fireImage.startAnimation(rotate)
+            fireImage.startAnimation(translate)
+        }, 4000)
+
+        // 음악 재생
+        mediaPlayer = MediaPlayer.create(this, R.raw.dd)
+        mediaPlayer.start()
+
+        // 스플래시 화면 종료
+        Handler(Looper.getMainLooper()).postDelayed({
+            mediaPlayer.release() // 음악 재생 종료 및 MediaPlayer 자원 해제
             startActivity(Intent(this, MainActivityTab2::class.java))
             finish()
-        }, 3000) // 3 seconds delay
+        }, 7000) // 7 seconds delay
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::mediaPlayer.isInitialized) {
+            mediaPlayer.release()
+        }
     }
 }

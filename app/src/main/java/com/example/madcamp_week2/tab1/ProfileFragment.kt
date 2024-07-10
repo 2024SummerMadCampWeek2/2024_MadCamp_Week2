@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -34,11 +33,6 @@ class ProfileFragment : Fragment() {
     private lateinit var sessionManager: SessionManager
     private var profileImageData: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
@@ -50,7 +44,23 @@ class ProfileFragment : Fragment() {
         sessionManager = SessionManager(requireContext())
         setupRecyclerViews()
         setupEditButton()
+        setupOverlayButton()
         loadUserProfile()
+
+        // Animate UI elements
+        binding.userProfileImageView.alpha = 0f
+        binding.userNameTextView.alpha = 0f
+        binding.userBioTextView.alpha = 0f
+        binding.readBooksRecyclerView.alpha = 0f
+        binding.toReadBooksRecyclerView.alpha = 0f
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            binding.userProfileImageView.animate().alpha(1f).setDuration(1000).start()
+            binding.userNameTextView.animate().alpha(1f).setDuration(1000).start()
+            binding.userBioTextView.animate().alpha(1f).setDuration(1000).start()
+            binding.readBooksRecyclerView.animate().alpha(1f).setDuration(1000).start()
+            binding.toReadBooksRecyclerView.animate().alpha(1f).setDuration(1000).start()
+        }
     }
 
     private fun setupRecyclerViews() {
@@ -64,7 +74,10 @@ class ProfileFragment : Fragment() {
             adapter = readBooksAdapter
         }
 
-        toReadBooksAdapter = ToReadBooksAdapter()
+        toReadBooksAdapter = ToReadBooksAdapter { isbn ->
+            // 책 프로필로 이동하는 로직
+            navigateToBookDetail(isbn)
+        }
         binding.toReadBooksRecyclerView.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = toReadBooksAdapter
@@ -72,10 +85,30 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun navigateToBookDetail(isbn: String) {
+        lifecycleScope.launch {
+            val book = userRepository.getBookByISBN(isbn)
+            book?.let {
+                val intent = Intent(requireContext(), BookDetailActivity::class.java)
+                intent.putExtra("book", it)
+                startActivity(intent)
+                requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+            }
+        }
+    }
+
     private fun setupEditButton() {
         binding.editProfileButton.setOnClickListener {
             val intent = Intent(activity, EditProfileActivity::class.java)
             startActivityForResult(intent, EDIT_PROFILE_REQUEST)
+        }
+    }
+
+    private fun setupOverlayButton() {
+        binding.overlayButton.setOnClickListener {
+            val intent = Intent(requireContext(), ReadBooksActivity::class.java)
+            startActivity(intent)
+            requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
     }
 
@@ -118,7 +151,7 @@ class ProfileFragment : Fragment() {
             Glide.with(this)
                 .load(imageBytes)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(binding.userProfileImageView.findViewById(R.id.userProfileImageView))
+                .into(binding.userProfileImageView)
         }
     }
 
@@ -129,14 +162,14 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        loadUserProfile()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadUserProfile()
     }
 
     companion object {
@@ -175,7 +208,7 @@ class ReadBooksAdapter : RecyclerView.Adapter<ReadBooksAdapter.BookViewHolder>()
     }
 }
 
-class ToReadBooksAdapter : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolder>() {
+class ToReadBooksAdapter(private val onItemClick: (String) -> Unit) : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolder>() {
     private var books: List<Pair<String, String?>> = listOf()
 
     fun setBooks(newBooks: List<Pair<String, String?>>) {
@@ -194,7 +227,7 @@ class ToReadBooksAdapter : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolde
 
     override fun getItemCount() = books.size
 
-    class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val imageView: ImageView = itemView.findViewById(R.id.bookImageView)
 
         fun bind(book: Pair<String, String?>) {
@@ -202,6 +235,10 @@ class ToReadBooksAdapter : RecyclerView.Adapter<ToReadBooksAdapter.BookViewHolde
                 .load(book.second)
                 .placeholder(R.drawable.book_placeholder)
                 .into(imageView)
+
+            itemView.setOnClickListener {
+                onItemClick(book.first)  // ISBN을 전달
+            }
         }
     }
 }
