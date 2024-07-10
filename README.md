@@ -35,7 +35,11 @@
 
 ## 미리보기
 
+<img width="599" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/652e1685-418b-4bbc-b2a5-1cadb325ee44">
 
+<img width="599" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/da2ca3ce-1de1-4cca-8983-4ee2eb8939b3">
+
+<img width="599" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/df694cbb-6aa9-485f-b6da-8006690a5193">
 
 <br/>
 
