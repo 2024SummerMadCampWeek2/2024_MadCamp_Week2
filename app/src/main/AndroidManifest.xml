@@ -18,7 +18,7 @@
         android:networkSecurityConfig="@xml/network_security_config">
 
         <activity
-            android:name=".tab1.LoginActivity"
+            android:name=".tab1.InitialActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
@@ -27,7 +27,9 @@
             </intent-filter>
         </activity>
 
-
+        <activity
+            android:name=".tab1.LoginActivity"
+            android:exported="false" />
 
 
 

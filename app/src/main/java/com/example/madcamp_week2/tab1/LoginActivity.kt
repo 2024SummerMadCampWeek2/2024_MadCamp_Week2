@@ -17,6 +17,19 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // 로그인 상태 확인
+        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+            if (error != null) {
+                // 로그인되지 않은 상태, 로그인 버튼 표시
+                showLoginButton()
+            } else {
+                // 이미 로그인된 상태, MainActivity로 이동
+                startMainActivity()
+            }
+        }
+    }
+
+    private fun showLoginButton() {
         binding.kakaoLoginButton.setOnClickListener {
             loginWithKakao()
         }
@@ -53,5 +66,6 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+        overridePendingTransition(0, 0)
     }
 }

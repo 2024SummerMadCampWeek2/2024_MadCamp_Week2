@@ -6,10 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.RotateAnimation
-import android.view.animation.TranslateAnimation
+import android.view.animation.*
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -40,43 +37,46 @@ class SplashActivity2 : AppCompatActivity() {
             fillAfter = true
         }
 
-        // 이미지 1, 2, 3 페이드 인
-        Handler(Looper.getMainLooper()).postDelayed({
-            image1.visibility = View.VISIBLE
-            image1.startAnimation(fadeIn)
-        }, 1000)
+        // 이미지 1, 2, 3 순차적으로 페이드 인
+        image1.visibility = View.VISIBLE
+        image1.startAnimation(fadeIn)
 
         Handler(Looper.getMainLooper()).postDelayed({
             image2.visibility = View.VISIBLE
             image2.startAnimation(fadeIn)
-        }, 2000)
+        }, 1000)
 
         Handler(Looper.getMainLooper()).postDelayed({
             image3.visibility = View.VISIBLE
             image3.startAnimation(fadeIn)
-        }, 3000)
+        }, 2000)
 
         // fire.png 회전 및 이동 애니메이션 설정
-        val rotate = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f).apply {
-            duration = 1000
-            repeatCount = Animation.INFINITE
+        val rotate = RotateAnimation(0f, 720f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f).apply {
+            duration = 2000
+            interpolator = LinearInterpolator()
         }
 
         val translate = TranslateAnimation(
-            Animation.RELATIVE_TO_PARENT, 0f,
+            Animation.RELATIVE_TO_PARENT, 1f,
+            Animation.RELATIVE_TO_PARENT, 0.1f,
             Animation.RELATIVE_TO_PARENT, -0.5f,
-            Animation.RELATIVE_TO_PARENT, 0f,
-            Animation.RELATIVE_TO_PARENT, 0.5f
+            Animation.RELATIVE_TO_PARENT, 0.8f
         ).apply {
             duration = 2000
+            interpolator = DecelerateInterpolator()
+        }
+
+        val animSet = AnimationSet(true).apply {
+            addAnimation(rotate)
+            addAnimation(translate)
             fillAfter = true
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
             fireImage.visibility = View.VISIBLE
-            fireImage.startAnimation(rotate)
-            fireImage.startAnimation(translate)
-        }, 4000)
+            fireImage.startAnimation(animSet)
+        }, 3000)
 
         // 음악 재생
         mediaPlayer = MediaPlayer.create(this, R.raw.dd)
