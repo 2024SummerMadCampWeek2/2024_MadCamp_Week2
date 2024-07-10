@@ -8,12 +8,14 @@
 
 
 
-## Team
+
+## 조원
 <br/>
 
 **백승주** <a href="https://github.com/gnwsb"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white"></a>
 
 **홍바다** <a href="https://github.com/BadaHong"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white"></a>
+
 
 
 
@@ -32,9 +34,11 @@
 - **DB:** MySQL
 - **통합개발환경:** VSCode, DBeaver
 
-<br/>
+
+
 
 ## 미리보기
+<br/>
 
 <img width="599" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/652e1685-418b-4bbc-b2a5-1cadb325ee44">
 
@@ -124,12 +128,14 @@ https://github.com/MunhwaSaenghwal/cultures/assets/110375619/e4854810-8c1a-48ce-
 .
 
 
-<br/>
+
+
+
 
 
 ## 기술 서술
+<br/>
 
----
 
 ### 프론트엔드
 
@@ -159,7 +165,9 @@ https://github.com/MunhwaSaenghwal/cultures/assets/110375619/e4854810-8c1a-48ce-
 **구글 트렌드 API (pytrends)**를 가져오기 위해 서버 내 엔드포인트에 해당 API를 연동하였습니다.
 
 
-<br/>
+
+
 ## Beta Version APK Link
+<br/>
 
 https://drive.google.com/file/d/1Jty9aDXskRawk5cRtKbEJkJ3yCTKnx-_/view?usp=sharing
