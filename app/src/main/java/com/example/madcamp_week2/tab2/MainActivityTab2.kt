@@ -12,13 +12,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.madcamp_week2.MainActivity
 import com.example.madcamp_week2.R
-import com.example.madcamp_week2.RetrofitInstance
 import com.example.madcamp_week2.ShakeDetector
-import com.example.madcamp_week2.SplashActivity2
-import com.example.madcamp_week2.Trend
-import com.example.madcamp_week2.VideoItem
-import com.example.madcamp_week2.ViewPagerAdapter
-import com.example.madcamp_week2.YouTubeResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

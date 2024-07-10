@@ -14,7 +14,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+        UserApiClient.instance.accessTokenInfo { _, error ->
             if (error != null) {
                 // 로그인되지 않은 상태
                 startLoginActivity()

@@ -47,10 +47,10 @@ class UserRepository(context: Context) {
                 put("description", userData.description)
                 put("reviewed_books", JSONArray(userData.reviewed_books.map { reviewedBook ->
                     JSONObject().apply {
-                        put("ISBN", reviewedBook?.ISBN)
-                        put("star", reviewedBook?.star)
-                        put("review", reviewedBook?.review)
-                        put("review_date", reviewedBook?.review_date)
+                        put("ISBN", reviewedBook.ISBN)
+                        put("star", reviewedBook.star)
+                        put("review", reviewedBook.review)
+                        put("review_date", reviewedBook.review_date)
                     }
                 }))
                 put("read_books", JSONArray(userData.read_books))
@@ -97,7 +97,7 @@ class UserRepository(context: Context) {
         }
     }
 
-    suspend fun fetchBookImages(isbnList: List<String>): List<Pair<String, String?>> = withContext(Dispatchers.IO) {
+    private suspend fun fetchBookImages(isbnList: List<String>): List<Pair<String, String?>> = withContext(Dispatchers.IO) {
         isbnList.map { isbn ->
             val imageUrl = NaverAPI.getBookImageByISBN(isbn)
             isbn to imageUrl
@@ -154,66 +154,15 @@ class UserRepository(context: Context) {
         fetchBookImages(toReadBooks)
     }
 
-    suspend fun addReadBook(username: String, isbn: String): Boolean = withContext(Dispatchers.IO) {
-        val userData = getLocalUser(username)
-        userData?.let {
-            val updatedReadBooks = listOf(isbn) + it.read_books
-            val updatedUserData = it.copy(read_books = updatedReadBooks)
-            updateUser(username, updatedUserData, null)
-        } ?: false
-    }
 
-    suspend fun addToReadBook(username: String, reviewedBook: ReviewedBook): Boolean = withContext(Dispatchers.IO) {
-        val userData = getLocalUser(username)
-        userData?.let {
-            val updatedReviewedBooks = listOf(reviewedBook) + it.reviewed_books
-            val updatedUserData = it.copy(reviewed_books = updatedReviewedBooks)
-            updateUser(username, updatedUserData, null)
-        } ?: false
-    }
 
-    suspend fun removeReadBook(username: String, isbn: String): Boolean = withContext(Dispatchers.IO) {
-        val userData = getLocalUser(username)
-        userData?.let {
-            val updatedReadBooks = it.read_books.filter { it != isbn }
-            val updatedReviewedBooks = it.reviewed_books.filter { it.ISBN != isbn }
-            val updatedUserData = it.copy(
-                read_books = updatedReadBooks,
-                reviewed_books = updatedReviewedBooks
-            )
-            val updated = updateUser(username, updatedUserData, null)
-            if (updated) {
-                updateLocalUser(updatedUserData)
-            }
-            updated
-        } ?: false
-    }
 
-    suspend fun updateOrAddReviewedBook(username: String, reviewedBook: ReviewedBook): Boolean = withContext(Dispatchers.IO) {
-        val userData = getLocalUser(username)
-        userData?.let {
-            val updatedReviewedBooks = it.reviewed_books.filter { it.ISBN != reviewedBook.ISBN } + reviewedBook
-            val updatedReadBooks = if (!it.read_books.contains(reviewedBook.ISBN)) {
-                it.read_books + reviewedBook.ISBN
-            } else {
-                it.read_books
-            }
-            val updatedUserData = it.copy(
-                reviewed_books = updatedReviewedBooks,
-                read_books = updatedReadBooks
-            )
-            val updated = updateUser(username, updatedUserData, null)
-            if (updated) {
-                updateLocalUser(updatedUserData)
-            }
-            updated
-        } ?: false
-    }
 
-    suspend fun refreshLocalUser(username: String) = withContext(Dispatchers.IO) {
-        val updatedUserData = getUser(username)
-        updatedUserData?.let { updateLocalUser(it) }
-    }
+
+
+
+
+
 
     suspend fun getBookByISBN(isbn: String): Book? = withContext(Dispatchers.IO) {
         try {

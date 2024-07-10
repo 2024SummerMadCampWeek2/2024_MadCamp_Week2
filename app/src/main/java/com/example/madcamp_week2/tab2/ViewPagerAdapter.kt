@@ -1,4 +1,4 @@
-package com.example.madcamp_week2
+package com.example.madcamp_week2.tab2
 
 import android.content.Intent
 import android.net.Uri
@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.madcamp_week2.R
 
 class ViewPagerAdapter(
     private val longVideos: List<VideoItem>,

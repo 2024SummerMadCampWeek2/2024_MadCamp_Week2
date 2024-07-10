@@ -13,8 +13,4 @@ class SessionManager(context: Context) {
     fun getUserName(): String? {
         return sharedPreferences.getString("USER_NAME", null)
     }
-
-    fun clearSession() {
-        sharedPreferences.edit().clear().apply()
-    }
 }
