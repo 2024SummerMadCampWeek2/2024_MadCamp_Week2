@@ -36,8 +36,6 @@
 ## 미리보기
 
 
-https://github.com/MunhwaSaenghwal/cultures/assets/110375619/c431f576-2aca-4613-849d-adc042eb6d4c
-
 
 <br/>
 
@@ -101,7 +99,7 @@ https://github.com/MunhwaSaenghwal/cultures/assets/110375619/c431f576-2aca-4613-
 
 .
 
-https://github.com/MunhwaSaenghwal/cultures/assets/110375619/edeb6c59-e9e6-4c4b-aa03-9a25fa02c642
+<img width="599" alt="db" src="[https://github.com/MunhwaSaenghwal/cultures/assets/110375619/5355a148-b5b8-4b31-9dbe-35711352a38d](https://github.com/MunhwaSaenghwal/cultures/assets/110375619/c66e552d-938c-4cab-912e-f313c20b3f9e)">
 
 
 # **뭔 책이여 현대사회에 발 빠르게 따라갈려면 트렌드에 민감하고 릴스쇼츠틱톡인스타유튜브나무위키에 빠삭해야지**
