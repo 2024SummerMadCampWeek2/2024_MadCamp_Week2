@@ -49,6 +49,9 @@
 
 
 
+
+
+
 ## 설명
 <br/>
 
@@ -133,6 +136,8 @@ https://github.com/MunhwaSaenghwal/cultures/assets/110375619/e4854810-8c1a-48ce-
 
 
 
+
+
 ## 기술 서술
 <br/>
 
@@ -163,6 +168,8 @@ https://github.com/MunhwaSaenghwal/cultures/assets/110375619/e4854810-8c1a-48ce-
 프론트엔드에서 보내온 이미지 파일은 BLOB 형식으로 변환되고, 이것을 **Base64로 인코딩**해 데이터베이스에 저장합니다. 프론트엔드에서 이미지를 가져올 때는 역순으로 디코딩이 진행됩니다.
 
 **구글 트렌드 API (pytrends)**를 가져오기 위해 서버 내 엔드포인트에 해당 API를 연동하였습니다.
+
+
 
 
 
