@@ -99,7 +99,7 @@
 
 .
 
-<img width="599" alt="db" src="[https://github.com/MunhwaSaenghwal/cultures/assets/110375619/5355a148-b5b8-4b31-9dbe-35711352a38d](https://github.com/MunhwaSaenghwal/cultures/assets/110375619/c66e552d-938c-4cab-912e-f313c20b3f9e)">
+<img width="599" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/c66e552d-938c-4cab-912e-f313c20b3f9e">
 
 
 # **뭔 책이여 현대사회에 발 빠르게 따라갈려면 트렌드에 민감하고 릴스쇼츠틱톡인스타유튜브나무위키에 빠삭해야지**
