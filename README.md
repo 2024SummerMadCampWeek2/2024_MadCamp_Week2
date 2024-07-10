@@ -4,7 +4,6 @@
 
 ## 개요
 
-<br/r>
 
 도파민 문고에 오신 것을 환영합니다. 도파민 많이 얻어가십쇼.
 
@@ -37,6 +36,7 @@
 ## 미리보기
 
 
+https://github.com/MunhwaSaenghwal/cultures/assets/110375619/c431f576-2aca-4613-849d-adc042eb6d4c
 
 
 <br/>
@@ -101,11 +101,16 @@
 
 .
 
-![KakaoTalk_20240710_200032049.jpg](https://prod-files-secure.s3.us-west-2.amazonaws.com/f6cb388f-3934-47d6-9928-26d2e10eb0fc/9898ebfc-6061-4dca-a94b-1e3122c8b437/KakaoTalk_20240710_200032049.jpg)
+https://github.com/MunhwaSaenghwal/cultures/assets/110375619/edeb6c59-e9e6-4c4b-aa03-9a25fa02c642
+
 
 # **뭔 책이여 현대사회에 발 빠르게 따라갈려면 트렌드에 민감하고 릴스쇼츠틱톡인스타유튜브나무위키에 빠삭해야지**
 
-[1000070377.mp4](https://prod-files-secure.s3.us-west-2.amazonaws.com/f6cb388f-3934-47d6-9928-26d2e10eb0fc/aa4942da-297f-424d-87a0-4c80a0b65b78/1000070377.mp4)
+
+
+https://github.com/MunhwaSaenghwal/cultures/assets/110375619/e4854810-8c1a-48ce-8730-583df26aa059
+
+
 
 # 도파민 탭에서 유저는 유튜브 인기급상승 동영상, 구글 인기 검색어의 무한 리스트를 통해 무책임한 도파민을 공급받을 수 있습니다 영상 썸네일을 누르면 재생되고 검색어를 누르면 브라우저에서 검색 결과를 볼 수 있습니다
 
@@ -139,7 +144,8 @@
 
 → MySQL 데이터베이스 구조:
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/f6cb388f-3934-47d6-9928-26d2e10eb0fc/6903c618-4889-4a03-8656-9fa52849fa62/Untitled.png)
+<img width="599" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/5355a148-b5b8-4b31-9dbe-35711352a38d">
+
 
 유저의 프로필 이미지를 저장하기 위해 **BLOB(Binary Large Object)** 형식, 
 
