@@ -60,7 +60,12 @@
 
         <activity
             android:name=".tab2.MainActivityTab2"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/SplashTheme"
+            />
+
+
+
         <activity android:name=".SplashActivity2"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
@@ -68,6 +73,9 @@
         <activity
             android:name=".tab1.ReadBooksActivity"
             android:exported="false" />
+
+
+
 
     </application>
 </manifest>

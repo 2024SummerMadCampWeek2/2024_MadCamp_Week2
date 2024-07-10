@@ -36,11 +36,12 @@
 
     <ImageView
         android:id="@+id/fireImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50000dp"
+        android:layout_height="50000dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="100dp"
         android:layout_marginStart="50dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/fire"
         android:visibility="invisible"/>
 
