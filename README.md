@@ -1,23 +1,24 @@
-# MunhwaSaenghwal - 문화생활
-
+# 도파민 문고
 <br/>
 
 ## 개요
-
+<br/>
 
 도파민 문고에 오신 것을 환영합니다. 도파민 많이 얻어가십쇼.
 
-<br/>
+
 
 ## Team
+<br/>
 
 **백승주** <a href="https://github.com/gnwsb"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white"></a>
 
 **홍바다** <a href="https://github.com/BadaHong"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white"></a>
 
-<br/>
+
 
 ## 기술 스택
+<br/>
 
 **프론트엔드**
 
@@ -41,11 +42,11 @@
 
 <img width="599" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/df694cbb-6aa9-485f-b6da-8006690a5193">
 
-<br/>
+
+
 
 ## 설명
-
----
+<br/>
 
 메인 화면은 크게 **사용자 프로필, 리뷰한 책, 읽을 책**으로 구성돼있습니다.
 
