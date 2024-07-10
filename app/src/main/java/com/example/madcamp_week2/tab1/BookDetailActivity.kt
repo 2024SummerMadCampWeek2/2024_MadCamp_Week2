@@ -153,7 +153,7 @@ class BookDetailActivity : AppCompatActivity() {
                         val existingReview = user.reviewed_books.find { it?.ISBN == book.isbn }
                         existingReview?.let {
                             binding.ratingBar.rating = it.star?.toFloat() ?: 0f
-                            binding.reviewEditText.setText(it.review ?: "")
+                            binding.reviewEditText.setText(it.review)
                         }
                     }
                 }

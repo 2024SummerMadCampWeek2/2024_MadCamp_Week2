@@ -21,8 +21,7 @@ interface UserAPI {
     @POST("users")
     fun createUser(@Body userData: UserData): Call<UserData>
 
-    @PUT("users/{username}")
-    fun updateUser(@Path("username") username: String, @Body userData: UserData): Call<UserData>
+
 }
 
 data class UserData(

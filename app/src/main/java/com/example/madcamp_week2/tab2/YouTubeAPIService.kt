@@ -1,4 +1,4 @@
-package com.example.madcamp_week2
+package com.example.madcamp_week2.tab2
 
 import okhttp3.OkHttpClient
 import retrofit2.Call
