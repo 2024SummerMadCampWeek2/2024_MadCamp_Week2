@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity(), ShakeDetector.OnShakeListener {
                 Log.d("MainActivity", "Kakao user info: ${user.id}, ${user.kakaoAccount?.profile?.nickname}")
 
                 val username = user.kakaoAccount?.profile?.nickname ?: "Unknown"
-                val profileImage = user.kakaoAccount?.profile?.thumbnailImageUrl ?: "https://example.com/default-profile.jpg" // 기본 이미지 URL
+                val profileImage = user.kakaoAccount?.profile?.thumbnailImageUrl
                 sessionManager.saveUserName(username)
 
                 lifecycleScope.launch {
@@ -145,8 +145,8 @@ class MainActivity : AppCompatActivity(), ShakeDetector.OnShakeListener {
                         // 새 사용자 생성
                         val newUser = UserData(
                             name = username,
-                            profileImage = profileImage,  // 기본 이미지 URL 사용
-                            description = "",  // 빈 문자열 사용
+                            profileImage = "",
+                            description = "",
                             reviewed_books = emptyList(),
                             read_books = emptyList()
                         )

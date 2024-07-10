@@ -19,7 +19,7 @@ interface UserAPI {
     ): Call<ResponseBody>
 
     @POST("users")
-    fun createUser(@Body userData: UserData): Call<UserData>
+    fun createUser(@Body userData: UserData): Call<Void>
 
 
 }
