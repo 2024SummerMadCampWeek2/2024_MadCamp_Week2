@@ -74,6 +74,10 @@
             android:name=".tab1.ReadBooksActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".tab2.YouTubePlayerActivity"
+            android:exported="false" />
+
 
 
 
