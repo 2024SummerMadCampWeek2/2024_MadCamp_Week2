@@ -55,8 +55,7 @@
                     android:scheme="kakao9e167b564736611eeda3fac0e447d065" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".YouTubePlayerActivity"/>
+
         <activity
             android:name=".tab2.MainActivityTab2"
             android:exported="true" />
