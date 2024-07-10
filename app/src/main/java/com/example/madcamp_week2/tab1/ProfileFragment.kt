@@ -100,6 +100,7 @@ class ProfileFragment : Fragment() {
         binding.editProfileButton.setOnClickListener {
             val intent = Intent(activity, EditProfileActivity::class.java)
             startActivityForResult(intent, EDIT_PROFILE_REQUEST)
+            requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
     }
 

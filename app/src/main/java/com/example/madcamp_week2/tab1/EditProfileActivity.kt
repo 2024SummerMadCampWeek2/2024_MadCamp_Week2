@@ -11,6 +11,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.example.madcamp_week2.R
 import com.example.madcamp_week2.databinding.ActivityEditProfileBinding
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
@@ -57,6 +58,7 @@ class EditProfileActivity : AppCompatActivity() {
         binding.editProfileImageView.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             startActivityForResult(intent, PICK_IMAGE_REQUEST)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
     }
 
@@ -93,6 +95,7 @@ class EditProfileActivity : AppCompatActivity() {
                 if (updated) {
                     Log.d("EditProfileActivity", "Profile updated successfully")
                     finish()
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
                 } else {
                     Log.e("EditProfileActivity", "Failed to update profile")
                 }
