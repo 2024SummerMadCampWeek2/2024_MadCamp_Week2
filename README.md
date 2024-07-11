@@ -42,11 +42,11 @@
 ## 미리보기
 <br/>
 
-<img width="400" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/652e1685-418b-4bbc-b2a5-1cadb325ee44">
+<img width="300" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/652e1685-418b-4bbc-b2a5-1cadb325ee44">
 
-<img width="400" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/da2ca3ce-1de1-4cca-8983-4ee2eb8939b3">
+<img width="300" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/da2ca3ce-1de1-4cca-8983-4ee2eb8939b3">
 
-<img width="400" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/df694cbb-6aa9-485f-b6da-8006690a5193">
+<img width="300" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/df694cbb-6aa9-485f-b6da-8006690a5193">
 
 
 
@@ -113,7 +113,7 @@
 
 .
 
-<img width="599" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/c66e552d-938c-4cab-912e-f313c20b3f9e">
+<img width="300" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/c66e552d-938c-4cab-912e-f313c20b3f9e">
 
 
 # **뭔 책이여 현대사회에 발 빠르게 따라갈려면 트렌드에 민감하고 릴스쇼츠틱톡인스타유튜브나무위키에 빠삭해야지**
