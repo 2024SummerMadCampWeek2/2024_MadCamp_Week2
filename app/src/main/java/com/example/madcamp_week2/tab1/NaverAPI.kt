@@ -17,8 +17,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 
 interface NaverAPI {
     @Headers(
-        "X-Naver-Client-Id: jLwbpquhx5ezFWdh4ELn",
-        "X-Naver-Client-Secret: A9UoONn6ns"
+        "X-Naver-Client-Id: jLwbpquhdh4ELn",
+        "X-Naver-Client-Secret: A96ns"
     )
     @GET("v1/search/book.json")
     fun searchBooks(
