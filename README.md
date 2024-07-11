@@ -1,6 +1,5 @@
 # 도파민 문고
 <br/>
-
 <img width="200" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/f98eb178-d113-4d18-bf0d-e6ed9cd6b710">
 
 
@@ -43,11 +42,11 @@
 ## 미리보기
 <br/>
 
-<img width="599" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/652e1685-418b-4bbc-b2a5-1cadb325ee44">
+<img width="400" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/652e1685-418b-4bbc-b2a5-1cadb325ee44">
 
-<img width="599" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/da2ca3ce-1de1-4cca-8983-4ee2eb8939b3">
+<img width="400" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/da2ca3ce-1de1-4cca-8983-4ee2eb8939b3">
 
-<img width="599" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/df694cbb-6aa9-485f-b6da-8006690a5193">
+<img width="400" alt="db" src="https://github.com/MunhwaSaenghwal/cultures/assets/110375619/df694cbb-6aa9-485f-b6da-8006690a5193">
 
 
 
