@@ -22,7 +22,7 @@ class MainActivityTab2 : AppCompatActivity(), ShakeDetector.OnShakeListener {
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private val longVideos = mutableListOf<VideoItem>()
     private val keywordList = mutableListOf<Trend>()
-    private val apiKey = "AIzaSyDzvTSzWtfStXajVhq2hupfpr0kzb5Dnbo"
+    private val apiKey = "AIzaSyDzvTSzWtfStXajkzb5Dnbo"
 
     private lateinit var sensorManager: SensorManager
     private lateinit var shakeDetector: ShakeDetector
