@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class UserRepository(context: Context) {
     private val userDao = UserDatabase.getInstance(context).userDao()
     private val userAPI = Retrofit.Builder()
-        .baseUrl("http://15.165.64.45/")
+        .baseUrl("http://15.165.4.45/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(UserAPI::class.java)
